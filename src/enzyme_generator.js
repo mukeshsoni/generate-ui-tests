@@ -109,7 +109,7 @@ test('${errorCase ? "breaking test" : "interaction test 1"}', () => {
   // }).join()
 
   const end = `\n\n  expect(wrapper).toMatchSnapshot()
-  })`
+})`
 
   return begin + findAndSimulateCommands + end
 }
