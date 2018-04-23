@@ -15,7 +15,7 @@ const TodoItem = ({ item, onCompletedChange, onRemoveClick }) => {
         justifyContent: "space-between"
       }}
     >
-      <div>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <input
           type="checkbox"
           checked={item.completed}

@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import "./App.css"
 import SimpleButton from "../../src/simple_button"
 import TodoItem from "./todoitem"
+import Footer from "./footer"
 
 class Bonker extends Component {
   componentWillReceiveProps(nextProps) {
@@ -15,11 +16,22 @@ class Bonker extends Component {
   }
 }
 
+function filterBy(filter, item) {
+  if (filter === "all") {
+    return true
+  } else if (filter === "active") {
+    return !item.completed
+  } else {
+    return item.completed
+  }
+}
+
 class App extends Component {
   state = {
     value: "",
     bonk: false,
-    todos: []
+    todos: [],
+    filter: "all"
   }
 
   handleKeyDown = e => {
@@ -56,6 +68,18 @@ class App extends Component {
     })
   }
 
+  handleAllFilterClick = () => {
+    this.setState({ filter: "all" })
+  }
+
+  handleActiveFilterClick = () => {
+    this.setState({ filter: "active" })
+  }
+
+  handleCompletedFilterClick = () => {
+    this.setState({ filter: "completed" })
+  }
+
   render() {
     return (
       <div
@@ -85,14 +109,23 @@ class App extends Component {
           onKeyDown={this.handleKeyDown}
           data-test-id="input to test"
         />
-        {this.state.todos.map((todoItem, index) => (
-          <TodoItem
-            item={todoItem}
-            key={index}
-            onCompletedChange={this.handleCompletedChange.bind(this, index)}
-            onRemoveClick={this.handleRemoveClick.bind(this, index)}
-          />
-        ))}
+        {this.state.todos
+          .filter(filterBy.bind(null, this.state.filter))
+          .map((todoItem, index) => (
+            <TodoItem
+              item={todoItem}
+              key={index}
+              onCompletedChange={this.handleCompletedChange.bind(this, index)}
+              onRemoveClick={this.handleRemoveClick.bind(this, index)}
+            />
+          ))}
+        <Footer
+          items={this.state.todos}
+          onAllFilterClick={this.handleAllFilterClick}
+          onActiveFilterClick={this.handleActiveFilterClick}
+          onCompletedFilterClick={this.handleCompletedFilterClick}
+          filter={this.state.filter}
+        />
         <br />
         <br />
         <br />
