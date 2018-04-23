@@ -18,7 +18,12 @@
     "test:coverage": "nwb test-react --coverage",
     "test:watch": "nwb test-react --server"
   },
-  "dependencies": {},
+  "dependencies": {
+    "react-collapsible": "^2.2.0",
+    "react-copy-to-clipboard": "^5.0.1",
+    "react-draggable": "^3.0.5",
+    "react-syntax-highlighter": "^7.0.2"
+  },
   "peerDependencies": {
     "react": "16.x"
   },
