@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import "./App.css"
 import SimpleButton from "../../src/simple_button"
+import TodoItem from "./todoitem"
 
 class Bonker extends Component {
   componentWillReceiveProps(nextProps) {
@@ -17,7 +18,42 @@ class Bonker extends Component {
 class App extends Component {
   state = {
     value: "",
-    bonk: false
+    bonk: false,
+    todos: []
+  }
+
+  handleKeyDown = e => {
+    if (e.keyCode === 13) {
+      this.setState({
+        todos: this.state.todos.concat({
+          text: this.state.value,
+          completed: false
+        }),
+        value: ""
+      })
+    }
+  }
+
+  handleCompletedChange = index => {
+    this.setState({
+      todos: [
+        ...this.state.todos.slice(0, index),
+        {
+          ...this.state.todos[index],
+          completed: !this.state.todos[index].completed
+        },
+        ...this.state.todos.slice(index + 1)
+      ]
+    })
+  }
+
+  handleRemoveClick = index => {
+    this.setState({
+      todos: [
+        ...this.state.todos.slice(0, index),
+        ...this.state.todos.slice(index + 1)
+      ]
+    })
   }
 
   render() {
@@ -26,34 +62,61 @@ class App extends Component {
         className="App"
         style={{ backgroundColor: "black", color: "#f1f1f1" }}
       >
-        <h3 style={{ marginBottom: 10 }}>
-          Welcome, {this.props.person.firstName} {this.props.person.lastName}!
-        </h3>
-        <input
-          style={{ marginRight: 10, width: "100%", marginBottom: 10 }}
-          value={this.state.value}
-          onChange={e => this.setState({ value: e.target.value })}
-          data-test-id="input to test"
-        />
-        <SimpleButton>Button without id attribute</SimpleButton>
-        <SimpleButton data-test-id="btn 1" id="ok-btn">
-          Ok
-        </SimpleButton>
-        <SimpleButton data-test-id="btn 2">Cancel</SimpleButton>
-        <div
+        <h3
           style={{
-            marginTop: 60,
-            display: "flex"
+            marginBottom: 10,
+            textAlign: "center",
+            fontSize: "3em",
+            fontWeight: 100
           }}
         >
-          <SimpleButton
-            data-test-id="btn-bonker"
-            onClick={() => this.setState({ bonk: true })}
-          >
-            Crash it 💔
+          todos
+        </h3>
+        <input
+          style={{
+            padding: "0.5em 1em",
+            fontSize: "1.2em",
+            width: "100%",
+            marginBottom: 10,
+            border: "none"
+          }}
+          value={this.state.value}
+          onChange={e => this.setState({ value: e.target.value })}
+          onKeyDown={this.handleKeyDown}
+          data-test-id="input to test"
+        />
+        {this.state.todos.map((todoItem, index) => (
+          <TodoItem
+            item={todoItem}
+            key={index}
+            onCompletedChange={this.handleCompletedChange.bind(this, index)}
+            onRemoveClick={this.handleRemoveClick.bind(this, index)}
+          />
+        ))}
+        <br />
+        <br />
+        <br />
+        <div style={{ marginTop: 100 }}>
+          <SimpleButton>Button without id attribute</SimpleButton>
+          <SimpleButton data-test-id="btn 1" id="ok-btn">
+            Ok
           </SimpleButton>
+          <SimpleButton data-test-id="btn 2">Cancel</SimpleButton>
+          <div
+            style={{
+              marginTop: 60,
+              display: "flex"
+            }}
+          >
+            <SimpleButton
+              data-test-id="btn-bonker"
+              onClick={() => this.setState({ bonk: true })}
+            >
+              Crash it 💔
+            </SimpleButton>
+          </div>
+          <Bonker bonk={this.state.bonk} />
         </div>
-        <Bonker bonk={this.state.bonk} />
       </div>
     )
   }

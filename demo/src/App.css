@@ -2,6 +2,7 @@
   background-color: "black";
   margin-top: 70px;
   padding: 100px;
+  max-width: 500px;
 }
 
 .App button {
