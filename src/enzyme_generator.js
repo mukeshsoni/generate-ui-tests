@@ -87,12 +87,12 @@ export function getTestString(
 ) {
   const begin = `const { mount } = require('enzyme')
     
-  test('${errorCase ? "breaking test" : "interaction test 1"}', () => {
-    const props = ${stringifyObject(initialProps)}
-    const wrapper = mount(<${componentName} {...props} />)
-      
-    expect(wrapper).toMatchSnapshot();
-  `
+test('${errorCase ? "breaking test" : "interaction test 1"}', () => {
+  const props = ${stringifyObject(initialProps)}
+  const wrapper = mount(<${componentName} {...props} />)
+    
+  expect(wrapper).toMatchSnapshot();
+`
 
   const findAndSimulateCommands = events
     .slice(startIndex, stopIndex + 1)

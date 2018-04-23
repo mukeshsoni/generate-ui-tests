@@ -7,10 +7,11 @@ import SimpleButton from "./simple_button"
 
 import SyntaxHighlighter, {
   registerLanguage
-} from "react-syntax-highlighter/light"
-import js from "react-syntax-highlighter/languages/hljs/javascript"
-import docco from "react-syntax-highlighter/styles/hljs/docco"
-registerLanguage("javascript", js)
+} from "react-syntax-highlighter/prism-light"
+import jsx from "react-syntax-highlighter/languages/prism/jsx"
+import prism from "react-syntax-highlighter/styles/prism/prism"
+
+registerLanguage("jsx", jsx)
 
 const CollapsibleHeader = props => {
   console.log("props ", props)
@@ -60,7 +61,7 @@ export class TestViewer extends React.Component {
                 <span style={{ color: "red", marginLeft: 10 }}>Copied</span>
               ) : null}
             </div>
-            <SyntaxHighlighter language="javascript" style={docco}>
+            <SyntaxHighlighter language="javascript" style={prism}>
               {testString}
             </SyntaxHighlighter>
           </div>
