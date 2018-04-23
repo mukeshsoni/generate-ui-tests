@@ -158,6 +158,7 @@ function testGenerator(Component) {
           </div>
           <div style={{ marginTop: 20 }}>
             <TestViewerContainer
+              componentName={Component.name}
               testString={this.state.generatedTest}
               onGetTestClick={this.stopTestGenertion}
               onStartTestGeneration={this.startTestGenertion}

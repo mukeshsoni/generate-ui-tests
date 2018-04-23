@@ -14,7 +14,6 @@ import prism from "react-syntax-highlighter/styles/prism/prism"
 registerLanguage("jsx", jsx)
 
 const CollapsibleHeader = props => {
-  console.log("props ", props)
   return (
     <div
       className="drag-handle"
@@ -26,7 +25,7 @@ const CollapsibleHeader = props => {
         padding: 10
       }}
     >
-      <h4>Automated tests</h4>
+      <h4>Automated test for {props.componentName}</h4>
       <div>></div>
     </div>
   )
@@ -84,7 +83,7 @@ export const TestViewerContainer = props => {
           style={{ position: "absolute", right: 30, top: 30, minWidth: 500 }}
         >
           <Collapsible
-            trigger={<CollapsibleHeader />}
+            trigger={<CollapsibleHeader componentName={props.componentName} />}
             transitionTime={100}
             lazyRender
           >
