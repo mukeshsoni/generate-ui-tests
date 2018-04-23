@@ -11,7 +11,13 @@ class Demo extends Component {
     return (
       <div>
         <h1>generate-ui-tests Demo</h1>
-        <NewApp person={{ firstName: "Mukesh", lastName: "Soni" }} />
+        <NewApp
+          person={{
+            firstName: "Mukesh",
+            lastName: "Soni",
+            onChange: () => console.log("person changed")
+          }}
+        />
       </div>
     )
   }
