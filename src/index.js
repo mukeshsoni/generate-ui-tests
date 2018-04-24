@@ -58,6 +58,7 @@ function testGenerator(Component) {
       errorHappened: false
     }
     initialProps = null
+    eventWrapperRef = null
 
     constructor(props) {
       super(props)
@@ -142,10 +143,14 @@ function testGenerator(Component) {
         }
       }
 
+      function targetNotEventWrapper(event, eventWrapperRef) {
+        return event.target !== eventWrapperRef
+      }
       // only record event if the target element is also listening on the same event
       if (
-        targetListeningOnEvent(eventName, event) ||
-        event.eventFromTestGenerator
+        (targetListeningOnEvent(eventName, event) ||
+          event.eventFromTestGenerator) &&
+        targetNotEventWrapper(event, this.eventWrapperRef)
       ) {
         this.events.push({
           type: event.type,
@@ -194,7 +199,10 @@ function testGenerator(Component) {
 
       return (
         <div>
-          <div {...this.getEventHandlers()}>
+          <div
+            {...this.getEventHandlers()}
+            ref={node => (this.eventWrapperRef = node)}
+          >
             <Component {...this.props} />
           </div>
           <div style={{ marginTop: 20 }}>

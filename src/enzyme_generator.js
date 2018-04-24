@@ -80,15 +80,15 @@ function testCommandsForFindAndSimulate(event) {
     case "mouseup":
       return `  wrapper.find('${getFindSelector(event)}')
            .simulate('mouseUp')`
-    // case "mouseenter":
-    //   return `  wrapper.find('${getFindSelector(event)}')
-    //        .simulate('mouseEnter')`
-    // case "mouseleave":
-    //   return `  wrapper.find('${getFindSelector(event)}')
-    //        .simulate('mouseLeave')`
+    case "mouseenter":
+      return `  wrapper.find('${getFindSelector(event)}')
+           .simulate('mouseEnter')`
+    case "mouseleave":
+      return `  wrapper.find('${getFindSelector(event)}')
+           .simulate('mouseLeave')`
     default:
       return `  wrapper.find('${getFindSelector(event)}')
-           .simulate('${event.type}')`
+         .simulate('${event.type}')`
   }
 }
 
