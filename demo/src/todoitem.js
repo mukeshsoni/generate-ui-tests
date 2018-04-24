@@ -14,17 +14,24 @@ const TodoItem = ({ item, onCompletedChange, onRemoveClick }) => {
         alignItems: "center",
         justifyContent: "space-between"
       }}
+      data-test-id="src_todoitem_test_id_0"
     >
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div
+        style={{ display: "flex", alignItems: "center" }}
+        data-test-id="src_todoitem_test_id_1"
+      >
         <input
           type="checkbox"
           checked={item.completed}
           onChange={onCompletedChange}
           style={{ marginRight: "1em", width: 30, height: 30 }}
+          data-test-id="src_todoitem_test_id_2"
         />
-        <span>{item.text}</span>
+        <span data-test-id="src_todoitem_test_id_3">{item.text}</span>
       </div>
-      <div onClick={onRemoveClick}>x</div>
+      <div onClick={onRemoveClick} data-test-id="src_todoitem_test_id_4">
+        x
+      </div>
     </div>
   )
 }

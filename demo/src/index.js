@@ -9,8 +9,8 @@ const NewApp = testGenerator(App)
 class Demo extends Component {
   render() {
     return (
-      <div>
-        <h1>generate-ui-tests Demo</h1>
+      <div data-test-id="src_index_test_id_0">
+        <h1 data-test-id="src_index_test_id_1">generate-ui-tests Demo</h1>
         <NewApp
           person={{
             firstName: "Mukesh",
@@ -19,7 +19,7 @@ class Demo extends Component {
           }}
         />
       </div>
-    )
+    );
   }
 }
 

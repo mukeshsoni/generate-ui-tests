@@ -85,6 +85,7 @@ class App extends Component {
       <div
         className="App"
         style={{ backgroundColor: "black", color: "#f1f1f1" }}
+        data-test-id="src_app_test_id_0"
       >
         <h3
           style={{
@@ -93,6 +94,7 @@ class App extends Component {
             fontSize: "3em",
             fontWeight: 100
           }}
+          data-test-id="src_app_test_id_1"
         >
           todos
         </h3>
@@ -126,10 +128,10 @@ class App extends Component {
           onCompletedFilterClick={this.handleCompletedFilterClick}
           filter={this.state.filter}
         />
-        <br />
-        <br />
-        <br />
-        <div style={{ marginTop: 100 }}>
+        <br data-test-id="src_app_test_id_2" />
+        <br data-test-id="src_app_test_id_3" />
+        <br data-test-id="src_app_test_id_4" />
+        <div style={{ marginTop: 100 }} data-test-id="src_app_test_id_5">
           <SimpleButton>Button without id attribute</SimpleButton>
           <SimpleButton data-test-id="btn 1" id="ok-btn">
             Ok
@@ -138,8 +140,10 @@ class App extends Component {
           <div
             style={{
               marginTop: 60,
+
               display: "flex"
             }}
+            data-test-id="src_app_test_id_6"
           >
             <SimpleButton
               data-test-id="btn-bonker"

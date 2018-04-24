@@ -106,37 +106,6 @@ function testGenerator(Component) {
       })
     }
 
-    handleClick = event => {
-      this.recordEvent(event)
-    }
-
-    handleFocus = event => {
-      if (eventOnFocussableElement(event)) {
-        this.recordEvent(event)
-      }
-    }
-
-    handleBlur = event => {
-      if (eventOnFocussableElement(event)) {
-        this.recordEvent(event)
-      }
-    }
-
-    handleChange = event => {
-      if (eventOnFocussableElement(event)) {
-        this.recordEvent(event)
-      }
-    }
-
-    handleMouseDown = event => {
-      // event.persist()
-      this.recordEvent(event)
-    }
-
-    handleKeyDown = event => {
-      this.recordEvent(event)
-    }
-
     getEventHandlers() {
       const eventHandlers = Object.keys(allEvents).reduce((acc, eventName) => {
         return {
