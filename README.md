@@ -65,9 +65,9 @@ You will probably need to install these to get the generated tests running -
 $ npm install jest babel-jest enzyme enzyme-adapter-react-16 enzyme-to-json babel-core --save-dev
 ```
 
-[build-badge]: https://img.shields.io/travis/user/repo/master.png?style=flat-square
-[build]: https://travis-ci.org/user/repo
-[npm-badge]: https://img.shields.io/npm/v/npm-package.png?style=flat-square
-[npm]: https://www.npmjs.org/package/npm-package
-[coveralls-badge]: https://img.shields.io/coveralls/user/repo/master.png?style=flat-square
-[coveralls]: https://coveralls.io/github/user/repo
+[build-badge]: https://img.shields.io/travis/mukeshsoni/generate-ui-tests/master.png?style=flat-square
+[build]: https://travis-ci.org/mukeshsoni/generate-ui-tests
+[npm-badge]: https://img.shields.io/npm/v/npm-generate-ui-tests.png?style=flat-square
+[npm]: https://www.npmjs.org/package/generate-ui-tests
+[coveralls-badge]: https://img.shields.io/coveralls/mukeshsoni/generate-ui-tests/master.png?style=flat-square
+[coveralls]: https://coveralls.io/github/mukeshsoni/generate-ui-tests
