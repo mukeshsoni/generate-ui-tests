@@ -127,16 +127,16 @@ function testGenerator(Component) {
         )[0]
 
         if (reactEventObjectProp) {
-          return Object.keys(event.target[reactEventObjectProp]).some(
-            propName =>
-              propName.toLowerCase().includes(eventName.toLowerCase()) &&
-              typeof event.target[reactEventObjectProp][propName] === "function"
-          )
-          // return (
-          //   typeof event.target[reactEventObjectProp][
-          //     eventToClickHandlerMapping(eventName)
-          //   ] === "function"
+          // return Object.keys(event.target[reactEventObjectProp]).some(
+          //   propName =>
+          //     propName.toLowerCase().includes(eventName.toLowerCase()) &&
+          //     typeof event.target[reactEventObjectProp][propName] === "function"
           // )
+          return (
+            typeof event.target[reactEventObjectProp][
+              eventToClickHandlerMapping(eventName)
+            ] === "function"
+          )
         } else {
           return false
         }
