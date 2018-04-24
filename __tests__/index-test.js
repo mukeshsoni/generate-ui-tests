@@ -37,11 +37,10 @@ test("something", () => {
     .simulate("keyDown", { keyCode: 13, which: 13 })
   wrapper
     .find('[data-test-id="input_to_test"]')
-    .at(0)
     .simulate("keyDown", { keyCode: 66, which: 66 })
-  // wrapper
-  //   .find('[data-test-id="src_todoitem_test_id_2"]')
-  //   // .at(0)
-  //   .simulate("change", { target: { value: "on", checked: true } })
+  wrapper
+    .find('[data-test-id="src_todoitem_test_id_2"]')
+    .first()
+    .simulate("change", { target: { value: "on", checked: true } })
   expect(toJson(wrapper)).toMatchSnapshot()
 })

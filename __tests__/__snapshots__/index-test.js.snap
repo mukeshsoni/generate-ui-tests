@@ -199,7 +199,7 @@ exports[`something 2`] = `
     <TodoItem
       item={
         Object {
-          "completed": false,
+          "completed": true,
           "text": "a",
         }
       }
@@ -233,7 +233,7 @@ exports[`something 2`] = `
           }
         >
           <input
-            checked={false}
+            checked={true}
             data-test-id="src_todoitem_test_id_2"
             onChange={[Function]}
             style={
@@ -325,7 +325,7 @@ exports[`something 2`] = `
       items={
         Array [
           Object {
-            "completed": false,
+            "completed": true,
             "text": "a",
           },
           Object {
@@ -354,7 +354,7 @@ exports[`something 2`] = `
         <span
           data-test-id="src_footer_test_id_1"
         >
-          2
+          1
            items left
         </span>
         <div
