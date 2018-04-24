@@ -1,13 +1,5 @@
 import stringifyObject from "stringify-object"
 
-function serialize(propVal) {
-  if (typeof propVal === "function") {
-    return propVal.toString()
-  } else {
-    return JSON.stringify(propVal)
-  }
-}
-
 /**
  * returns the selector which can be used to get hold of the element on which the event occured
  * If the target has an id the selector will be '#id'
@@ -30,7 +22,10 @@ function getFindSelector(event) {
 function testCommandsForFindAndSimulate(event) {
   switch (event.type) {
     case "componentWillReceiveProps":
-      return `  wrapper.setProps(${stringifyObject(event.nextProps)})`
+      return `  wrapper.setProps(${stringifyObject(event.nextProps, {
+        indent: "  ",
+        inlineCharacterLimit: 12
+      })})`
     case "change":
       return `  wrapper.find('${getFindSelector(event)}')
                       .simulate('change', {target: {value: "${
@@ -73,6 +68,18 @@ function squashSimilarConsecutiveEvents(result, str, currentIndex, arr) {
   }
 }
 
+function indentAllLines(str, indentTimes) {
+  var newStr = str
+  for (let i = 0; i < indentTimes; i++) {
+    newStr = str
+      .split("\n")
+      .map(line => "  " + line)
+      .join("\n")
+  }
+
+  return newStr
+}
+
 export function getTestString(
   initialProps,
   componentName,
@@ -85,7 +92,13 @@ export function getTestString(
   const begin = `const { mount } = require('enzyme')
     
 test('${errorCase ? "breaking test" : "interaction test 1"}', () => {
-  const props = ${stringifyObject(initialProps)}
+  const props = ${indentAllLines(
+    stringifyObject(initialProps, {
+      indent: "  ",
+      inlineCharacterLimit: 12
+    }),
+    1
+  )}
   const wrapper = mount(<${componentName} {...props} />)
     
   expect(wrapper).toMatchSnapshot();
