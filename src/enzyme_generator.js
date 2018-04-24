@@ -42,8 +42,7 @@ function testCommandsForFindAndSimulate(event) {
     case "focus":
     case "blur":
       return `  wrapper.find('${getFindSelector(event)}')
-           .simulate('${event.type}')
-           `
+           .simulate('${event.type}')`
     default:
       return ""
   }
@@ -91,7 +90,6 @@ export function getTestString(
   stopIndex,
   errorCase
 ) {
-  console.log("events", events)
   const begin = `const { mount } = require('enzyme')
     
 test('${errorCase ? "breaking test" : "interaction test 1"}', () => {

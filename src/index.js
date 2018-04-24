@@ -87,7 +87,6 @@ function testGenerator(Component) {
     }
 
     stopTestGenertion = () => {
-      console.log("captured events", this.events)
       const eventStopIndex = this.events.length
 
       const testString = getTestString(
@@ -98,8 +97,6 @@ function testGenerator(Component) {
         eventStopIndex
       )
 
-      console.log("generated test string")
-      console.log(testString)
       this.setState({
         generatedTest: testString,
         eventStopIndex
@@ -177,7 +174,7 @@ function testGenerator(Component) {
     render() {
       if (this.state.errorHappened) {
         return (
-          <div style={{ marginTop: 100 }}>
+          <div style={{ marginTop: 10 }}>
             <h3 style={{ marginBottom: 20 }}>
               Looks like your app crashed 💣💥. This might help 👀.
             </h3>

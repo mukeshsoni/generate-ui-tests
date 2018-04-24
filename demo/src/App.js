@@ -103,7 +103,7 @@ class App extends Component {
             padding: "0.5em 1em",
             fontSize: "1.2em",
             width: "100%",
-            marginBottom: 10,
+            marginBottom: 20,
             border: "none"
           }}
           value={this.state.value}
@@ -132,11 +132,6 @@ class App extends Component {
         <br data-test-id="src_app_test_id_3" />
         <br data-test-id="src_app_test_id_4" />
         <div style={{ marginTop: 100 }} data-test-id="src_app_test_id_5">
-          <SimpleButton>Button without id attribute</SimpleButton>
-          <SimpleButton data-test-id="btn 1" id="ok-btn">
-            Ok
-          </SimpleButton>
-          <SimpleButton data-test-id="btn 2">Cancel</SimpleButton>
           <div
             style={{
               marginTop: 60,

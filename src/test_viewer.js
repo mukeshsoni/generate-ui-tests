@@ -102,7 +102,7 @@ export const TestViewerContainer = props => {
                   style={{ marginRight: 10 }}
                   onClick={props.onStartTestGeneration}
                 >
-                  Start
+                  Start from now
                 </SimpleButton>
                 <SimpleButton onClick={props.onStopTestGeneration}>
                   Get test
