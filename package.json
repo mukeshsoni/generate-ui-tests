@@ -1,12 +1,12 @@
 {
   "name": "generate-ui-tests",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "generate-ui-tests React component",
   "main": "lib/index.js",
   "module": "es/index.js",
   "files": ["css", "es", "lib", "umd"],
   "scripts": {
-    "build": "nwb build-react-component",
+    "build": "nwb build-react-component --copy-files",
     "clean": "nwb clean-module && nwb clean-demo",
     "start": "nwb serve-react-demo",
     "test": "nwb test-react",
