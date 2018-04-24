@@ -37,11 +37,12 @@ function testCommandsForFindAndSimulate(event) {
         }),
         1
       )})`
+    case "input":
     case "change":
       return `  wrapper.find('${getFindSelector(event)}')
-                      .simulate('change', {target: {value: "${
-                        event.target.value
-                      }", checked: ${event.target.checked}}})`
+                      .simulate('${event.type}', {target: {value: "${
+        event.target.value
+      }", checked: ${event.target.checked}}})`
     case "keydown":
       return `  wrapper.find('${getFindSelector(
         event
