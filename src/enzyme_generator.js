@@ -82,6 +82,14 @@ function indentAllLines(str, indentTimes) {
   return newStr
 }
 
+function removeEmptyStrings(acc, str) {
+  if (str.trim() === "") {
+    return acc
+  } else {
+    return acc.concat(str)
+  }
+}
+
 export function getTestString(
   initialProps,
   componentName,
@@ -108,6 +116,7 @@ test('${errorCase ? "breaking test" : "interaction test 1"}', () => {
   const findAndSimulateCommands = events
     .slice(startIndex, stopIndex + 1)
     .map(testCommandsForFindAndSimulate)
+    .reduce(removeEmptyStrings, [])
     .reduce(squashSimilarConsecutiveEvents, [])
     .join("\n")
 

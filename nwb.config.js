@@ -1,11 +1,11 @@
 module.exports = {
-  type: 'react-component',
+  type: "react-component",
   npm: {
     esModules: true,
     umd: {
-      global: 'y',
+      global: "y",
       externals: {
-        react: 'React'
+        react: "React"
       }
     }
   }

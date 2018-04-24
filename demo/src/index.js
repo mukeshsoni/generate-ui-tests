@@ -3,6 +3,7 @@ import { render } from "react-dom"
 import App from "./App"
 
 import testGenerator from "../../src"
+// import testGenerator from "generate-ui-tests"
 
 const NewApp = testGenerator(App)
 
@@ -19,7 +20,7 @@ class Demo extends Component {
           }}
         />
       </div>
-    );
+    )
   }
 }
 
