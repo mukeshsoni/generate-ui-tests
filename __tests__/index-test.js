@@ -19,7 +19,7 @@ test("something", () => {
       }
     }
   }
-  const wrapper = shallow(<App {...props} />)
+  const wrapper = mount(<App {...props} />)
 
   expect(toJson(wrapper)).toMatchSnapshot()
   // wrapper.find("div").simulate("mouseEnter")
@@ -39,9 +39,9 @@ test("something", () => {
     .find('[data-test-id="input_to_test"]')
     .at(0)
     .simulate("keyDown", { keyCode: 66, which: 66 })
-  wrapper
-    .find('[data-test-id="src_todoitem_test_id_2"]')
-    .at(0)
-    .simulate("change", { target: { value: "on", checked: true } })
+  // wrapper
+  //   .find('[data-test-id="src_todoitem_test_id_2"]')
+  //   // .at(0)
+  //   .simulate("change", { target: { value: "on", checked: true } })
   expect(toJson(wrapper)).toMatchSnapshot()
 })

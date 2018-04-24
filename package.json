@@ -1,6 +1,6 @@
 {
   "name": "generate-ui-tests",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "generate-ui-tests React component",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -46,6 +46,7 @@
     "gh-pages": "^1.1.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^22.4.3",
+    "jest-enzyme": "^6.0.0",
     "nwb": "0.21.x",
     "react": "^16.3.2",
     "react-dom": "^16.3.2"

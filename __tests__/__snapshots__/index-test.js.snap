@@ -1,87 +1,432 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`something 1`] = `
-<div
-  className="App"
-  data-test-id="src_app_test_id_0"
-  style={
+<App
+  person={
     Object {
-      "backgroundColor": "black",
-      "color": "#f1f1f1",
+      "firstName": "Mukesh",
+      "lastName": "Soni",
+      "onChange": [Function],
     }
   }
 >
-  <h3
-    data-test-id="src_app_test_id_1"
-    style={
-      Object {
-        "fontSize": "3em",
-        "fontWeight": 100,
-        "marginBottom": 10,
-        "textAlign": "center",
-      }
-    }
-  >
-    todos
-  </h3>
-  <input
-    data-test-id="input_to_test"
-    onChange={[Function]}
-    onKeyDown={[Function]}
-    style={
-      Object {
-        "border": "none",
-        "fontSize": "1.2em",
-        "marginBottom": 20,
-        "padding": "0.5em 1em",
-        "width": "100%",
-      }
-    }
-    value=""
-  />
-  <Footer
-    filter="all"
-    items={Array []}
-    onActiveFilterClick={[Function]}
-    onAllFilterClick={[Function]}
-    onCompletedFilterClick={[Function]}
-  />
-  <br
-    data-test-id="src_app_test_id_2"
-  />
-  <br
-    data-test-id="src_app_test_id_3"
-  />
-  <br
-    data-test-id="src_app_test_id_4"
-  />
   <div
-    data-test-id="src_app_test_id_5"
+    className="App"
+    data-test-id="src_app_test_id_0"
     style={
       Object {
-        "marginTop": 100,
+        "backgroundColor": "black",
+        "color": "#f1f1f1",
       }
     }
   >
-    <div
-      data-test-id="src_app_test_id_6"
+    <h3
+      data-test-id="src_app_test_id_1"
       style={
         Object {
-          "display": "flex",
-          "marginTop": 60,
+          "fontSize": "3em",
+          "fontWeight": 100,
+          "marginBottom": 10,
+          "textAlign": "center",
         }
       }
     >
-      <SimpleButton
-        data-test-id="btn-bonker"
-        onClick={[Function]}
-      >
-        Crash it 💔
-      </SimpleButton>
-    </div>
-    <Bonker
-      bonk={false}
+      todos
+    </h3>
+    <input
+      data-test-id="input_to_test"
+      onChange={[Function]}
+      onKeyDown={[Function]}
+      style={
+        Object {
+          "border": "none",
+          "fontSize": "1.2em",
+          "marginBottom": 20,
+          "padding": "0.5em 1em",
+          "width": "100%",
+        }
+      }
+      value=""
     />
+    <Footer
+      filter="all"
+      items={Array []}
+      onActiveFilterClick={[Function]}
+      onAllFilterClick={[Function]}
+      onCompletedFilterClick={[Function]}
+    >
+      <div
+        data-test-id="src_footer_test_id_0"
+        style={
+          Object {
+            "backgroundColor": "#083045",
+            "display": "flex",
+            "fontSize": "1.2em",
+            "justifyContent": "space-between",
+            "padding": 20,
+            "width": "100%",
+          }
+        }
+      >
+        <span
+          data-test-id="src_footer_test_id_1"
+        >
+          0
+           items left
+        </span>
+        <div
+          data-test-id="src_footer_test_id_2"
+        >
+          <a
+            className="selected filter-button"
+            data-test-id="src_footer_test_id_3"
+            onClick={[Function]}
+          >
+            All
+          </a>
+          <a
+            className="filter-button"
+            data-test-id="src_footer_test_id_4"
+            onClick={[Function]}
+          >
+            Active
+          </a>
+          <a
+            className="filter-button"
+            data-test-id="src_footer_test_id_5"
+            onClick={[Function]}
+          >
+            Completed
+          </a>
+        </div>
+      </div>
+    </Footer>
+    <br
+      data-test-id="src_app_test_id_2"
+    />
+    <br
+      data-test-id="src_app_test_id_3"
+    />
+    <br
+      data-test-id="src_app_test_id_4"
+    />
+    <div
+      data-test-id="src_app_test_id_5"
+      style={
+        Object {
+          "marginTop": 100,
+        }
+      }
+    >
+      <div
+        data-test-id="src_app_test_id_6"
+        style={
+          Object {
+            "display": "flex",
+            "marginTop": 60,
+          }
+        }
+      >
+        <SimpleButton
+          data-test-id="btn-bonker"
+          onClick={[Function]}
+        >
+          <button
+            className="simple-button"
+            data-test-id="btn-bonker"
+            onClick={[Function]}
+          >
+            Crash it 💔
+          </button>
+        </SimpleButton>
+      </div>
+      <Bonker
+        bonk={false}
+      />
+    </div>
   </div>
-</div>
+</App>
+`;
+
+exports[`something 2`] = `
+<App
+  person={
+    Object {
+      "firstName": "Mukesh",
+      "lastName": "Soni",
+      "onChange": [Function],
+    }
+  }
+>
+  <div
+    className="App"
+    data-test-id="src_app_test_id_0"
+    style={
+      Object {
+        "backgroundColor": "black",
+        "color": "#f1f1f1",
+      }
+    }
+  >
+    <h3
+      data-test-id="src_app_test_id_1"
+      style={
+        Object {
+          "fontSize": "3em",
+          "fontWeight": 100,
+          "marginBottom": 10,
+          "textAlign": "center",
+        }
+      }
+    >
+      todos
+    </h3>
+    <input
+      data-test-id="input_to_test"
+      onChange={[Function]}
+      onKeyDown={[Function]}
+      style={
+        Object {
+          "border": "none",
+          "fontSize": "1.2em",
+          "marginBottom": 20,
+          "padding": "0.5em 1em",
+          "width": "100%",
+        }
+      }
+      value=""
+    />
+    <TodoItem
+      item={
+        Object {
+          "completed": false,
+          "text": "a",
+        }
+      }
+      key="0"
+      onCompletedChange={[Function]}
+      onRemoveClick={[Function]}
+    >
+      <div
+        data-test-id="src_todoitem_test_id_0"
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "rgb(238, 211, 105)",
+            "color": "black",
+            "display": "flex",
+            "fontSize": "1.2em",
+            "justifyContent": "space-between",
+            "marginBottom": 10,
+            "padding": "0.5em 1em",
+            "width": "100%",
+          }
+        }
+      >
+        <div
+          data-test-id="src_todoitem_test_id_1"
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <input
+            checked={false}
+            data-test-id="src_todoitem_test_id_2"
+            onChange={[Function]}
+            style={
+              Object {
+                "height": 30,
+                "marginRight": "1em",
+                "width": 30,
+              }
+            }
+            type="checkbox"
+          />
+          <span
+            data-test-id="src_todoitem_test_id_3"
+          >
+            a
+          </span>
+        </div>
+        <div
+          data-test-id="src_todoitem_test_id_4"
+          onClick={[Function]}
+        >
+          x
+        </div>
+      </div>
+    </TodoItem>
+    <TodoItem
+      item={
+        Object {
+          "completed": false,
+          "text": "",
+        }
+      }
+      key="1"
+      onCompletedChange={[Function]}
+      onRemoveClick={[Function]}
+    >
+      <div
+        data-test-id="src_todoitem_test_id_0"
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "rgb(238, 211, 105)",
+            "color": "black",
+            "display": "flex",
+            "fontSize": "1.2em",
+            "justifyContent": "space-between",
+            "marginBottom": 10,
+            "padding": "0.5em 1em",
+            "width": "100%",
+          }
+        }
+      >
+        <div
+          data-test-id="src_todoitem_test_id_1"
+          style={
+            Object {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <input
+            checked={false}
+            data-test-id="src_todoitem_test_id_2"
+            onChange={[Function]}
+            style={
+              Object {
+                "height": 30,
+                "marginRight": "1em",
+                "width": 30,
+              }
+            }
+            type="checkbox"
+          />
+          <span
+            data-test-id="src_todoitem_test_id_3"
+          />
+        </div>
+        <div
+          data-test-id="src_todoitem_test_id_4"
+          onClick={[Function]}
+        >
+          x
+        </div>
+      </div>
+    </TodoItem>
+    <Footer
+      filter="all"
+      items={
+        Array [
+          Object {
+            "completed": false,
+            "text": "a",
+          },
+          Object {
+            "completed": false,
+            "text": "",
+          },
+        ]
+      }
+      onActiveFilterClick={[Function]}
+      onAllFilterClick={[Function]}
+      onCompletedFilterClick={[Function]}
+    >
+      <div
+        data-test-id="src_footer_test_id_0"
+        style={
+          Object {
+            "backgroundColor": "#083045",
+            "display": "flex",
+            "fontSize": "1.2em",
+            "justifyContent": "space-between",
+            "padding": 20,
+            "width": "100%",
+          }
+        }
+      >
+        <span
+          data-test-id="src_footer_test_id_1"
+        >
+          2
+           items left
+        </span>
+        <div
+          data-test-id="src_footer_test_id_2"
+        >
+          <a
+            className="selected filter-button"
+            data-test-id="src_footer_test_id_3"
+            onClick={[Function]}
+          >
+            All
+          </a>
+          <a
+            className="filter-button"
+            data-test-id="src_footer_test_id_4"
+            onClick={[Function]}
+          >
+            Active
+          </a>
+          <a
+            className="filter-button"
+            data-test-id="src_footer_test_id_5"
+            onClick={[Function]}
+          >
+            Completed
+          </a>
+        </div>
+      </div>
+    </Footer>
+    <br
+      data-test-id="src_app_test_id_2"
+    />
+    <br
+      data-test-id="src_app_test_id_3"
+    />
+    <br
+      data-test-id="src_app_test_id_4"
+    />
+    <div
+      data-test-id="src_app_test_id_5"
+      style={
+        Object {
+          "marginTop": 100,
+        }
+      }
+    >
+      <div
+        data-test-id="src_app_test_id_6"
+        style={
+          Object {
+            "display": "flex",
+            "marginTop": 60,
+          }
+        }
+      >
+        <SimpleButton
+          data-test-id="btn-bonker"
+          onClick={[Function]}
+        >
+          <button
+            className="simple-button"
+            data-test-id="btn-bonker"
+            onClick={[Function]}
+          >
+            Crash it 💔
+          </button>
+        </SimpleButton>
+      </div>
+      <Bonker
+        bonk={false}
+      />
+    </div>
+  </div>
+</App>
 `;

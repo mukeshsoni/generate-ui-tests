@@ -138,6 +138,8 @@ export function getTestString(
   errorCase
 ) {
   const begin = `const { mount } = require('enzyme')
+import toJson, {createSerializer} from 'enzyme-to-json';
+expect.addSnapshotSerializer(createSerializer({mode: 'deep'}));
     
 test('${errorCase ? "breaking test" : "interaction test 1"}', () => {
   const props = ${indentAllLines(
@@ -149,7 +151,7 @@ test('${errorCase ? "breaking test" : "interaction test 1"}', () => {
   )}
   const wrapper = mount(<${componentName} {...props} />)
     
-  expect(wrapper).toMatchSnapshot();
+  expect(toJson(wrapper)).toMatchSnapshot();
 `
 
   const findAndSimulateCommands = events
@@ -159,7 +161,7 @@ test('${errorCase ? "breaking test" : "interaction test 1"}', () => {
     .reduce(squashSimilarConsecutiveEvents, [])
     .join("\n")
 
-  const end = `\n  expect(wrapper).toMatchSnapshot()
+  const end = `\n  expect(toJson(wrapper)).toMatchSnapshot()
 })`
 
   return begin + findAndSimulateCommands + end
