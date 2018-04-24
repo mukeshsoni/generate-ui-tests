@@ -1,6 +1,6 @@
 {
   "name": "generate-ui-tests",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "generate-ui-tests React component",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -9,10 +9,20 @@
     "build": "nwb build-react-component --copy-files",
     "clean": "nwb clean-module && nwb clean-demo",
     "start": "nwb serve-react-demo",
-    "test": "nwb test-react",
+    "test": "jest",
+    "test: coverage": "jest --coverage",
+    "test:watch": "jest --watch",
     "test:coverage": "nwb test-react --coverage",
-    "test:watch": "nwb test-react --server",
     "deploy": "gh-pages -d demo/dist"
+  },
+  "jest": {
+    "snapshotSerializers": ["enzyme-to-json/serializer"],
+    "transform": {
+      "^.+\\.js$": "./jest.transform.js"
+    },
+    "moduleNameMapper": {
+      "\\.(css|less)$": "identity-obj-proxy"
+    }
   },
   "dependencies": {
     "react-collapsible": "^2.2.0",
@@ -25,7 +35,17 @@
     "react": "16.x"
   },
   "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-jest": "^22.4.3",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme-to-json": "^3.3.3",
     "gh-pages": "^1.1.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^22.4.3",
     "nwb": "0.21.x",
     "react": "^16.3.2",
     "react-dom": "^16.3.2"

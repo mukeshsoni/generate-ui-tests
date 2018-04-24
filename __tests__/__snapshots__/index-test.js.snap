@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`something 1`] = `
+<div
+  className="App"
+  data-test-id="src_app_test_id_0"
+  style={
+    Object {
+      "backgroundColor": "black",
+      "color": "#f1f1f1",
+    }
+  }
+>
+  <h3
+    data-test-id="src_app_test_id_1"
+    style={
+      Object {
+        "fontSize": "3em",
+        "fontWeight": 100,
+        "marginBottom": 10,
+        "textAlign": "center",
+      }
+    }
+  >
+    todos
+  </h3>
+  <input
+    data-test-id="input_to_test"
+    onChange={[Function]}
+    onKeyDown={[Function]}
+    style={
+      Object {
+        "border": "none",
+        "fontSize": "1.2em",
+        "marginBottom": 20,
+        "padding": "0.5em 1em",
+        "width": "100%",
+      }
+    }
+    value=""
+  />
+  <Footer
+    filter="all"
+    items={Array []}
+    onActiveFilterClick={[Function]}
+    onAllFilterClick={[Function]}
+    onCompletedFilterClick={[Function]}
+  />
+  <br
+    data-test-id="src_app_test_id_2"
+  />
+  <br
+    data-test-id="src_app_test_id_3"
+  />
+  <br
+    data-test-id="src_app_test_id_4"
+  />
+  <div
+    data-test-id="src_app_test_id_5"
+    style={
+      Object {
+        "marginTop": 100,
+      }
+    }
+  >
+    <div
+      data-test-id="src_app_test_id_6"
+      style={
+        Object {
+          "display": "flex",
+          "marginTop": 60,
+        }
+      }
+    >
+      <SimpleButton
+        data-test-id="btn-bonker"
+        onClick={[Function]}
+      >
+        Crash it 💔
+      </SimpleButton>
+    </div>
+    <Bonker
+      bonk={false}
+    />
+  </div>
+</div>
+`;

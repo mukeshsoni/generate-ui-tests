@@ -109,7 +109,7 @@ class App extends Component {
           value={this.state.value}
           onChange={e => this.setState({ value: e.target.value })}
           onKeyDown={this.handleKeyDown}
-          data-test-id="input to test"
+          data-test-id="input_to_test"
         />
         {this.state.todos
           .filter(filterBy.bind(null, this.state.filter))

@@ -48,19 +48,19 @@ function testCommandsForFindAndSimulate(event) {
         event
       )}').simulate('keyDown', {keyCode: ${event.keyCode}, which: ${
         event.which
-      }, key: ${event.key}})`
+      }})`
     case "keyup":
       return `  wrapper.find('${getFindSelector(
         event
       )}').simulate('keyUp', {keyCode: ${event.keyCode}, which: ${
         event.which
-      }, key: ${event.key}})`
+      }})`
     case "keypress":
       return `  wrapper.find('${getFindSelector(
         event
       )}').simulate('keyPress', {keyCode: ${event.keyCode}, which: ${
         event.which
-      }, key: ${event.key}})`
+      }})`
     case "click":
     case "focus":
     case "blur":
@@ -75,12 +75,12 @@ function testCommandsForFindAndSimulate(event) {
     case "mouseup":
       return `  wrapper.find('${getFindSelector(event)}')
            .simulate('mouseUp')`
-    case "mouseenter":
-      return `  wrapper.find('${getFindSelector(event)}')
-           .simulate('mouseEnter')`
-    case "mouseleave":
-      return `  wrapper.find('${getFindSelector(event)}')
-           .simulate('mouseLeave')`
+    // case "mouseenter":
+    //   return `  wrapper.find('${getFindSelector(event)}')
+    //        .simulate('mouseEnter')`
+    // case "mouseleave":
+    //   return `  wrapper.find('${getFindSelector(event)}')
+    //        .simulate('mouseLeave')`
     default:
       return `  wrapper.find('${getFindSelector(event)}')
            .simulate('${event.type}')`
