@@ -37,7 +37,7 @@ function testCommandsForFindAndSimulate(event) {
                         event.target.value
                       }", checked: ${event.target.checked}}})`
     case "keydown":
-      return ` wrapper.find('${getFindSelector(
+      return `  wrapper.find('${getFindSelector(
         event
       )}').simulate('keyDown', {keyCode: ${event.keyCode}})`
     case "click":

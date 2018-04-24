@@ -12,11 +12,11 @@ function eventOnFocussableElement(event) {
   return focusableElements.includes(event.target.tagName.toLowerCase())
 }
 
-// function shallowDiffers(a, b) {
-//   for (let i in a) if (!(i in b)) return true
-//   for (let i in b) if (a[i] !== b[i]) return true
-//   return false
-// }
+function shallowDiffers(a, b) {
+  for (let i in a) if (!(i in b)) return true
+  for (let i in b) if (a[i] !== b[i]) return true
+  return false
+}
 
 function capitalize(str) {
   return str[0].toUpperCase() + str.slice(1)
@@ -36,7 +36,13 @@ function eventToClickHandlerMapping(eventName) {
  * @param {string} eventName
  */
 function eventToCaptureClickHandlerMapping(eventName) {
-  return eventToClickHandlerMapping(eventName) + "Capture"
+  // mouseenter and mouseleave do not have capture phase but have special bubbling
+  // https://github.com/facebook/react/issues/2826
+  if (eventName === "mouseEnter" || eventName === "mouseLeave") {
+    return eventToClickHandlerMapping(eventName)
+  } else {
+    return eventToClickHandlerMapping(eventName) + "Capture"
+  }
 }
 
 function testGenerator(Component) {
@@ -59,13 +65,13 @@ function testGenerator(Component) {
     }
 
     componentWillReceiveProps(nextProps) {
-      // if (shallowDiffers(this.props, nextProsp)) {
-      this.events.push({
-        eventFromTestGenerator: true,
-        type: "componentWillReceiveProps",
-        nextProps
-      })
-      // }
+      if (shallowDiffers(this.props, nextProps)) {
+        this.events.push({
+          eventFromTestGenerator: true,
+          type: "componentWillReceiveProps",
+          nextProps
+        })
+      }
     }
 
     componentDidCatch = (error, info) => {
@@ -143,6 +149,90 @@ function testGenerator(Component) {
       }
     }
 
+    getEventHandlers() {
+      const events = {
+        clipboard: ["copy", "cut", "paste"],
+        composition: [
+          "compositionEnd",
+          "compositionStart",
+          "compositionUpdate"
+        ],
+        keyboard: ["keyDown", "keyUp", "keyPress"],
+        focus: ["focus", "blur"],
+        form: ["change", "input", "invalid", "submit"],
+        mouse: [
+          "click",
+          "contextMenu",
+          "doubleClick",
+          "drag",
+          "dragEnd",
+          "dragEnter",
+          "dragExit",
+          "dragLeave",
+          "dragOver",
+          "dragStart",
+          "drop",
+          "mouseDown",
+          "mouseEnter",
+          "mouseLeave",
+          "mouseMove",
+          "mouseOut",
+          "mouseOver",
+          "mouseUp"
+        ],
+        selection: ["select"],
+        touch: ["touchCancel", "touchEnd", "touchMove", "touchStart"],
+        ui: ["scroll"],
+        wheel: ["wheel"],
+        media: [
+          "abort",
+          "canPlay",
+          "canPlayThrough",
+          "durationChange",
+          "emptied",
+          "encrypted",
+          "ended",
+          "error",
+          "loadedData",
+          "loadedMetadata",
+          "loadStart",
+          "pause",
+          "play",
+          "playing",
+          "progress",
+          "rateChange",
+          "seeked",
+          "seeking",
+          "stalled",
+          "suspend",
+          "timeUpdate",
+          "volumeChange",
+          "waiting"
+        ],
+        image: ["load", "error"],
+        animation: ["animationStart", "animationEnd", "animationIteration"],
+        transition: ["transitionEnd"],
+        others: ["toggle"]
+      }
+
+      const allEventNames = Object.entries(events)
+        .map(([eventType, eventNames]) => eventNames)
+        .reduce((acc, eventNames) => acc.concat(eventNames), [])
+
+      console.log("alleventnames", allEventNames)
+      const eventHandlers = allEventNames.reduce((acc, eventName) => {
+        return {
+          ...acc,
+          [eventToCaptureClickHandlerMapping(eventName)]: this.recordEvent.bind(
+            this,
+            eventName
+          )
+        }
+      }, {})
+
+      return eventHandlers
+    }
+
     recordEvent = (eventName, event) => {
       function targetListeningOnEvent(eventName, event) {
         // the event object has a weird property named something like '__reactEventHandlers$<random_chars>
@@ -206,21 +296,9 @@ function testGenerator(Component) {
         )
       }
 
-      const events = ["click", "focus", "blur", "change", "keyDown"]
-
-      const eventHandlers = events.reduce((acc, eventName) => {
-        return {
-          ...acc,
-          [eventToCaptureClickHandlerMapping(eventName)]: this.recordEvent.bind(
-            this,
-            eventName
-          )
-        }
-      }, {})
-
       return (
         <div>
-          <div {...eventHandlers}>
+          <div {...this.getEventHandlers()}>
             <Component {...this.props} />
           </div>
           <div style={{ marginTop: 20 }}>
