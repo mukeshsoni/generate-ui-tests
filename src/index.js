@@ -1,6 +1,7 @@
 import React from "react"
 import { TestViewer, TestViewerContainer } from "./test_viewer"
 import { getTestString } from "./enzyme_generator"
+import { allEvents } from "./events_map"
 import "./base.css"
 
 function eventHasTarget(event) {
@@ -86,6 +87,7 @@ function testGenerator(Component) {
     }
 
     stopTestGenertion = () => {
+      console.log("captured events", this.events)
       const eventStopIndex = this.events.length
 
       const testString = getTestString(
@@ -135,92 +137,8 @@ function testGenerator(Component) {
       this.recordEvent(event)
     }
 
-    recordEvent2 = (eventName, event) => {
-      const reactEventObject = Object.keys(event.target).filter(key =>
-        key.includes("__reactEventHandlers")
-      )[0]
-
-      if (
-        event.target &&
-        typeof event.target[reactEventObject]["on" + capitalize(eventName)] ===
-          "function"
-      ) {
-        this.recordEvent(event)
-      }
-    }
-
     getEventHandlers() {
-      const events = {
-        clipboard: ["copy", "cut", "paste"],
-        composition: [
-          "compositionEnd",
-          "compositionStart",
-          "compositionUpdate"
-        ],
-        keyboard: ["keyDown", "keyUp", "keyPress"],
-        focus: ["focus", "blur"],
-        form: ["change", "input", "invalid", "submit"],
-        mouse: [
-          "click",
-          "contextMenu",
-          "doubleClick",
-          "drag",
-          "dragEnd",
-          "dragEnter",
-          "dragExit",
-          "dragLeave",
-          "dragOver",
-          "dragStart",
-          "drop",
-          "mouseDown",
-          "mouseEnter",
-          "mouseLeave",
-          "mouseMove",
-          "mouseOut",
-          "mouseOver",
-          "mouseUp"
-        ],
-        selection: ["select"],
-        touch: ["touchCancel", "touchEnd", "touchMove", "touchStart"],
-        ui: ["scroll"],
-        wheel: ["wheel"],
-        media: [
-          "abort",
-          "canPlay",
-          "canPlayThrough",
-          "durationChange",
-          "emptied",
-          "encrypted",
-          "ended",
-          "error",
-          "loadedData",
-          "loadedMetadata",
-          "loadStart",
-          "pause",
-          "play",
-          "playing",
-          "progress",
-          "rateChange",
-          "seeked",
-          "seeking",
-          "stalled",
-          "suspend",
-          "timeUpdate",
-          "volumeChange",
-          "waiting"
-        ],
-        image: ["load", "error"],
-        animation: ["animationStart", "animationEnd", "animationIteration"],
-        transition: ["transitionEnd"],
-        others: ["toggle"]
-      }
-
-      const allEventNames = Object.entries(events)
-        .map(([eventType, eventNames]) => eventNames)
-        .reduce((acc, eventNames) => acc.concat(eventNames), [])
-
-      console.log("alleventnames", allEventNames)
-      const eventHandlers = allEventNames.reduce((acc, eventName) => {
+      const eventHandlers = Object.keys(allEvents).reduce((acc, eventName) => {
         return {
           ...acc,
           [eventToCaptureClickHandlerMapping(eventName)]: this.recordEvent.bind(
@@ -238,16 +156,21 @@ function testGenerator(Component) {
         // the event object has a weird property named something like '__reactEventHandlers$<random_chars>
         // which contains info about the input as setup in jsx
         // so it includes the event handlers setup in jsx by the user - like onKeyDown, onClick etc.
-        const reactEventObject = Object.keys(event.target).filter(key =>
+        const reactEventObjectProp = Object.keys(event.target).filter(key =>
           key.includes("__reactEventHandlers")
         )[0]
 
-        if (reactEventObject) {
-          return (
-            typeof event.target[reactEventObject][
-              eventToClickHandlerMapping(eventName)
-            ] === "function"
+        if (reactEventObjectProp) {
+          return Object.keys(event.target[reactEventObjectProp]).some(
+            propName =>
+              propName.toLowerCase().includes(eventName.toLowerCase()) &&
+              typeof event.target[reactEventObjectProp][propName] === "function"
           )
+          // return (
+          //   typeof event.target[reactEventObjectProp][
+          //     eventToClickHandlerMapping(eventName)
+          //   ] === "function"
+          // )
         } else {
           return false
         }
@@ -263,6 +186,13 @@ function testGenerator(Component) {
           key: event.key,
           keyCode: event.keyCode,
           which: event.which,
+          ...allEvents[eventName].reduce(
+            (acc, propName) => ({
+              ...acc,
+              [propName]: event[propName]
+            }),
+            {}
+          ),
           target: {
             "data-test-id": event.target.getAttribute("data-test-id"),
             id: event.target.getAttribute("id"),
