@@ -22,10 +22,13 @@ function getFindSelector(event) {
 function testCommandsForFindAndSimulate(event) {
   switch (event.type) {
     case "componentWillReceiveProps":
-      return `  wrapper.setProps(${stringifyObject(event.nextProps, {
-        indent: "  ",
-        inlineCharacterLimit: 12
-      })})`
+      return `  wrapper.setProps(${indentAllLines(
+        stringifyObject(event.nextProps, {
+          indent: "  ",
+          inlineCharacterLimit: 12
+        }),
+        1
+      )})`
     case "change":
       return `  wrapper.find('${getFindSelector(event)}')
                       .simulate('change', {target: {value: "${
@@ -106,19 +109,11 @@ test('${errorCase ? "breaking test" : "interaction test 1"}', () => {
 
   const findAndSimulateCommands = events
     .slice(startIndex, stopIndex + 1)
-    // .filter(eventHasTarget)
     .map(testCommandsForFindAndSimulate)
     .reduce(squashSimilarConsecutiveEvents, [])
     .join("\n")
-  // .map((event, index) => {
-  //   return (
-  //     <div key={"test_generator_log_" + index}>
-  //       Event: {event.type}, target: {getTargetIdentifierString(event.target)}
-  //     </div>
-  //   )
-  // }).join()
 
-  const end = `\n\n  expect(wrapper).toMatchSnapshot()
+  const end = `\n  expect(wrapper).toMatchSnapshot()
 })`
 
   return begin + findAndSimulateCommands + end
