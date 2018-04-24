@@ -22,6 +22,23 @@ function capitalize(str) {
   return str[0].toUpperCase() + str.slice(1)
 }
 
+// event names are 'click', 'keyDown', 'blur' etc.
+// event handlers in react are onClick, onKeyDown, onBlur
+// easy to get event handler names from event names
+function eventToClickHandlerMapping(eventName) {
+  return "on" + capitalize(eventName)
+}
+
+/**
+ * we want to listen on the Capture version of events
+ * so instead of onClick, onClickCapture, since that handler is invoked in the
+ * first phase of event capture - flowing from top to bottom
+ * @param {string} eventName
+ */
+function eventToCaptureClickHandlerMapping(eventName) {
+  return eventToClickHandlerMapping(eventName) + "Capture"
+}
+
 function testGenerator(Component) {
   return class TestGeneratorComponent extends React.Component {
     events = []
@@ -44,6 +61,7 @@ function testGenerator(Component) {
     componentWillReceiveProps(nextProps) {
       // if (shallowDiffers(this.props, nextProsp)) {
       this.events.push({
+        eventFromTestGenerator: true,
         type: "componentWillReceiveProps",
         nextProps
       })
@@ -107,16 +125,64 @@ function testGenerator(Component) {
       this.recordEvent(event)
     }
 
-    recordEvent = event => {
-      this.events.push({
-        type: event.type,
-        target: {
-          dataTestId: event.target.getAttribute("data-test-id"),
-          id: event.target.getAttribute("id"),
-          tagName: event.target.tagName,
-          value: event.target.value
+    handleKeyDown = event => {
+      this.recordEvent(event)
+    }
+
+    recordEvent2 = (eventName, event) => {
+      const reactEventObject = Object.keys(event.target).filter(key =>
+        key.includes("__reactEventHandlers")
+      )[0]
+
+      if (
+        event.target &&
+        typeof event.target[reactEventObject]["on" + capitalize(eventName)] ===
+          "function"
+      ) {
+        this.recordEvent(event)
+      }
+    }
+
+    recordEvent = (eventName, event) => {
+      function targetListeningOnEvent(eventName, event) {
+        // the event object has a weird property named something like '__reactEventHandlers$<random_chars>
+        // which contains info about the input as setup in jsx
+        // so it includes the event handlers setup in jsx by the user - like onKeyDown, onClick etc.
+        const reactEventObject = Object.keys(event.target).filter(key =>
+          key.includes("__reactEventHandlers")
+        )[0]
+
+        if (reactEventObject) {
+          return (
+            typeof event.target[reactEventObject][
+              eventToClickHandlerMapping(eventName)
+            ] === "function"
+          )
+        } else {
+          return false
         }
-      })
+      }
+
+      // only record event if the target element is also listening on the same event
+      if (
+        targetListeningOnEvent(eventName, event) ||
+        event.eventFromTestGenerator
+      ) {
+        this.events.push({
+          type: event.type,
+          key: event.key,
+          keyCode: event.keyCode,
+          which: event.which,
+          target: {
+            "data-test-id": event.target.getAttribute("data-test-id"),
+            id: event.target.getAttribute("id"),
+            tagName: event.target.tagName,
+            value: event.target.value,
+            checked: event.target.checked,
+            type: event.target && event.target.type
+          }
+        })
+      }
     }
 
     render() {
@@ -140,14 +206,15 @@ function testGenerator(Component) {
         )
       }
 
-      const events = ["click", "focus", "blur", "change"]
+      const events = ["click", "focus", "blur", "change", "keyDown"]
 
-      const eventHandlers = events.reduce((acc, event) => {
+      const eventHandlers = events.reduce((acc, eventName) => {
         return {
           ...acc,
-          ["on" + capitalize(event) + "Capture"]: this[
-            "handle" + capitalize(event)
-          ]
+          [eventToCaptureClickHandlerMapping(eventName)]: this.recordEvent.bind(
+            this,
+            eventName
+          )
         }
       }, {})
 

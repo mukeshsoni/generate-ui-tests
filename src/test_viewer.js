@@ -86,6 +86,7 @@ export const TestViewerContainer = props => {
             trigger={<CollapsibleHeader componentName={props.componentName} />}
             transitionTime={100}
             lazyRender
+            open
           >
             <div>
               <div

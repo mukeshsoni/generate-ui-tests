@@ -19,6 +19,7 @@
     "test:watch": "nwb test-react --server"
   },
   "dependencies": {
+    "clone-deep": "^4.0.0",
     "i": "^0.3.6",
     "npm": "^5.8.0",
     "react-collapsible": "^2.2.0",

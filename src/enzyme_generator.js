@@ -8,48 +8,44 @@ function serialize(propVal) {
   }
 }
 
-function testCommandsForFindAndSimulate(event) {
+/**
+ * returns the selector which can be used to get hold of the element on which the event occured
+ * If the target has an id the selector will be '#id'
+ * If the target has a data-test-id attribute, the selector will be '[data-test-attribute="the_attribute_val"]'
+ * @param {Object} event
+ */
+function getFindSelector(event) {
   const id = event.target && event.target.id
-  const dataTestId = event.target && event.target.dataTestId
+  const dataTestId = event.target && event.target["data-test-id"]
 
+  if (id) {
+    return `#${id}`
+  } else if (dataTestId) {
+    return `[data-test-id="${dataTestId}"]`
+  } else {
+    return event.target.tagName.toLowerCase()
+  }
+}
+
+function testCommandsForFindAndSimulate(event) {
   switch (event.type) {
     case "componentWillReceiveProps":
       return `  wrapper.setProps(${stringifyObject(event.nextProps)})`
     case "change":
-      if (id) {
-        return `  wrapper.find('#${id}')
+      return `  wrapper.find('${getFindSelector(event)}')
                       .simulate('change', {target: {value: "${
                         event.target.value
-                      }"}})`
-      } else if (dataTestId) {
-        return `  wrapper.find('[data-test-id="${dataTestId}"]')
-                      .simulate('change', {target: {value: "${
-                        event.target.value
-                      }"}})`
-      } else {
-        return `  //TODO - couldn't find a unique identifier for element. The find selector needs refinement
-    wrapper.find('${event.target.tagName.toLowerCase()}').get(0).simulate('change', {target: {value: ${
-          event.target.value
-        }}})`
-      }
+                      }", checked: ${event.target.checked}}})`
+    case "keydown":
+      return ` wrapper.find('${getFindSelector(
+        event
+      )}').simulate('keyDown', {keyCode: ${event.keyCode}})`
     case "click":
     case "focus":
     case "blur":
-      if (id) {
-        return `  wrapper.find('#${id}')
+      return `  wrapper.find('${getFindSelector(event)}')
            .simulate('${event.type}')
            `
-      } else if (dataTestId) {
-        return `  wrapper.find('[data-test-id="${dataTestId}"]')
-           .simulate('${event.type}')
-           `
-      } else {
-        return `  //TODO - couldn't find a unique identifier for element. The find selector needs refinement
-    wrapper.find('${event.target.tagName.toLowerCase()}')
-           .get(0)
-           .simulate('${event.type}')
-           `
-      }
     default:
       return ""
   }
@@ -85,6 +81,7 @@ export function getTestString(
   stopIndex,
   errorCase
 ) {
+  console.log("events", events)
   const begin = `const { mount } = require('enzyme')
     
 test('${errorCase ? "breaking test" : "interaction test 1"}', () => {
