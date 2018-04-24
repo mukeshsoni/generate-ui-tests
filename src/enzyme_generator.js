@@ -21,6 +21,14 @@ function getFindSelector(event) {
 
 function testCommandsForFindAndSimulate(event) {
   switch (event.type) {
+    case "copy":
+    case "cut":
+    case "paste":
+      return `  wrapper.find('${getFindSelector(event)}')
+                       .simulate('${event.type}', {clipboardData: ${
+        event.clipboardData
+      }})`
+
     case "componentWillReceiveProps":
       return `  wrapper.setProps(${indentAllLines(
         stringifyObject(event.nextProps, {
@@ -37,14 +45,44 @@ function testCommandsForFindAndSimulate(event) {
     case "keydown":
       return `  wrapper.find('${getFindSelector(
         event
-      )}').simulate('keyDown', {keyCode: ${event.keyCode}})`
+      )}').simulate('keyDown', {keyCode: ${event.keyCode}, which: ${
+        event.which
+      }, key: ${event.key}})`
+    case "keyup":
+      return `  wrapper.find('${getFindSelector(
+        event
+      )}').simulate('keyUp', {keyCode: ${event.keyCode}, which: ${
+        event.which
+      }, key: ${event.key}})`
+    case "keypress":
+      return `  wrapper.find('${getFindSelector(
+        event
+      )}').simulate('keyPress', {keyCode: ${event.keyCode}, which: ${
+        event.which
+      }, key: ${event.key}})`
     case "click":
     case "focus":
     case "blur":
       return `  wrapper.find('${getFindSelector(event)}')
            .simulate('${event.type}')`
+    case "dblclick":
+      return `  wrapper.find('${getFindSelector(event)}')
+           .simulate('doubleClick')`
+    case "mousedown":
+      return `  wrapper.find('${getFindSelector(event)}')
+           .simulate('mouseDown')`
+    case "mouseup":
+      return `  wrapper.find('${getFindSelector(event)}')
+           .simulate('mouseUp')`
+    case "mouseenter":
+      return `  wrapper.find('${getFindSelector(event)}')
+           .simulate('mouseEnter')`
+    case "mouseleave":
+      return `  wrapper.find('${getFindSelector(event)}')
+           .simulate('mouseLeave')`
     default:
-      return ""
+      return `  wrapper.find('${getFindSelector(event)}')
+           .simulate('${event.type}')`
   }
 }
 
@@ -70,7 +108,7 @@ function squashSimilarConsecutiveEvents(result, str, currentIndex, arr) {
   }
 }
 
-function indentAllLines(str, indentTimes) {
+function indentAllLines(str, indentTimes = 1) {
   var newStr = str
   for (let i = 0; i < indentTimes; i++) {
     newStr = str

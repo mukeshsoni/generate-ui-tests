@@ -33,7 +33,7 @@ export const eventsMap = {
       "mouseEnter",
       "mouseLeave",
       // "mouseMove",
-      "mouseOut",
+      // "mouseOut",
       // "mouseOver",
       "mouseUp"
     ],
