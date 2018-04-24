@@ -11,7 +11,8 @@ What if one can generate enzyme tests for react which are full blown interaction
 Prerequisites -
 
 Your html elements (div, p, h1 etc.) will need to have a `data-test-id` attribute, or an `id` attribute.
-You can use [this](https://github.com/mukeshsoni/codemods) codemod to add `data-test-id` attribute to all your html elements inside your jsx. You can modify all your components inside a folder by pointing `jscodeshift` to a folder.
+You can use [this](https://github.com/mukeshsoni/codemods) codemod, [https://github.com/mukeshsoni/codemods](https://github.com/mukeshsoni/codemods), to add `data-test-id` attribute to all your html elements inside your jsx. You can modify all your components inside a folder by pointing `jscodeshift` to a folder.
+The `data-test-id` attribute can be removed in the production build using this babel plugin - [babel-plugin-remove-data-test-id-attribute](https://github.com/mukeshsoni/babel-plugin-remove-data-test-id-attribute).
 
 Once you have `data-test-id` attribute on every html element, you can wrap the component you want to generate UI tests on in the HOC provided by this component -
 
@@ -57,6 +58,12 @@ That's it. Now you should see a floating yellow header which says "Automated tes
 Do some activity on your UI. Click 'Get test'. Click 'Copy to clipboard' to copy the test to your clipboard.
 
 Right now, it only generates enzyme tests.
+
+You will probably need to install these to get the generated tests running -
+
+```
+$ npm install jest babel-jest enzyme enzyme-adapter-react-16 enzyme-to-json babel-core --save-dev
+```
 
 [build-badge]: https://img.shields.io/travis/user/repo/master.png?style=flat-square
 [build]: https://travis-ci.org/user/repo

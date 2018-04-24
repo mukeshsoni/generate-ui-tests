@@ -6,6 +6,11 @@ import stringifyObject from "stringify-object"
  * If the target has a data-test-id attribute, the selector will be '[data-test-attribute="the_attribute_val"]'
  * @param {Object} event
  */
+// TODO - In case of list item components, using our codemod, different list items
+// will have some data-test-id. find().simulate() will return an error
+// Maybe we should check if there are multiple targets with same data-test-id
+// and find the index of the target on which the event was generated
+// has to be done during event capture phase, i.e. in recordEvent method of top index.js
 function getFindSelector(event) {
   const id = event.target && event.target.id
   const dataTestId = event.target && event.target["data-test-id"]
