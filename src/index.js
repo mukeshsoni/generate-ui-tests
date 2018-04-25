@@ -1,6 +1,7 @@
 import React from "react"
 import { TestViewer, TestViewerContainer } from "./test_viewer"
-import { getFindSelector, getTestString } from "./enzyme_generator"
+import { getTestString } from "./enzyme_generator"
+import { getFindSelector } from "./utils/selector"
 import { allEvents } from "./events_map"
 import "./base.css"
 
