@@ -2,7 +2,6 @@ import React from "react"
 import { TestViewer, TestViewerContainer } from "./test_viewer"
 import { getFindSelector, getTestString } from "./enzyme_generator"
 import { allEvents } from "./events_map"
-import $ from "jquery"
 import "./base.css"
 
 function eventHasTarget(event) {
@@ -96,14 +95,13 @@ function createEventObject(eventName, event) {
   }
 
   function moreThanOnePossibleTargets(event) {
-    console.log("selector", getFindSelector(event))
-    return $(getFindSelector(event)).length > 1
+    return document.querySelectorAll(getFindSelector(event)).length > 1
   }
 
   function findIndexOfTargetInPossibleCandidates(event) {
     let i = -1
 
-    $(getFindSelector(event)).each((index, el) => {
+    document.querySelectorAll(getFindSelector(event)).forEach((el, index) => {
       if (el === event.target) {
         i = index
       }

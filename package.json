@@ -1,15 +1,10 @@
 {
   "name": "generate-ui-tests",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "generate-ui-tests React component",
   "main": "lib/index.js",
   "module": "es/index.js",
-  "files": [
-    "css",
-    "es",
-    "lib",
-    "umd"
-  ],
+  "files": ["css", "es", "lib", "umd"],
   "scripts": {
     "build": "nwb build-react-component --copy-files",
     "clean": "nwb clean-module && nwb clean-demo",
@@ -21,9 +16,7 @@
     "deploy": "gh-pages -d demo/dist"
   },
   "jest": {
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ],
+    "snapshotSerializers": ["enzyme-to-json/serializer"],
     "transform": {
       "^.+\\.js$": "./jest.transform.js"
     },
@@ -32,7 +25,6 @@
     }
   },
   "dependencies": {
-    "jquery": "^3.3.1",
     "react-collapsible": "^2.2.0",
     "react-copy-to-clipboard": "^5.0.1",
     "react-draggable": "^3.0.5",
@@ -62,7 +54,5 @@
   "homepage": "",
   "license": "MIT",
   "repository": "https://github.com/mukeshsoni/generate-ui-tests",
-  "keywords": [
-    "react-component"
-  ]
+  "keywords": ["react-component"]
 }
