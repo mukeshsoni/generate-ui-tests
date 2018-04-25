@@ -1,7 +1,8 @@
 import React from "react"
 import { TestViewer, TestViewerContainer } from "./test_viewer"
-import { getTestString } from "./enzyme_generator"
+import { getFindSelector, getTestString } from "./enzyme_generator"
 import { allEvents } from "./events_map"
+import $ from "jquery"
 import "./base.css"
 
 function eventHasTarget(event) {
@@ -46,6 +47,83 @@ function eventToCaptureClickHandlerMapping(eventName) {
   }
 }
 
+const customEvents = {
+  COMPONENT_WILL_RECEIVE_PROPS: "COMPONENT_WILL_RECEIVE_PROPS"
+}
+
+function isCustomEvent(event) {
+  return Object.values(customEvents).includes(event.type)
+}
+
+/**
+ * we take properties from the event which might be needed to be passed on while simulating the event
+ * Or helpful in any other way while creating the test string
+ * @param {Object} event
+ */
+function createEventObject(eventName, event) {
+  let id = event.target && event.target.getAttribute("id")
+  let dataTestId = event.target && event.target.getAttribute("data-test-id")
+
+  const ourEvent = {
+    type: event.type,
+    key: event.key,
+    keyCode: event.keyCode,
+    which: event.which,
+    ...allEvents[eventName].reduce(
+      (acc, propName) => ({
+        ...acc,
+        [propName]: event[propName]
+      }),
+      {}
+    ),
+    target: {
+      "data-test-id": dataTestId,
+      id: id,
+      tagName: event.target.tagName,
+      value: event.target.value,
+      checked: event.target.checked,
+      type: event.target && event.target.type,
+      getAttribute: attr => {
+        if (attr === "id") {
+          return id
+        } else if (attr === "data-test-id") {
+          return dataTestId
+        } else {
+          return null
+        }
+      }
+    }
+  }
+
+  function moreThanOnePossibleTargets(event) {
+    console.log("selector", getFindSelector(event))
+    return $(getFindSelector(event)).length > 1
+  }
+
+  function findIndexOfTargetInPossibleCandidates(event) {
+    let i = -1
+
+    $(getFindSelector(event)).each((index, el) => {
+      if (el === event.target) {
+        i = index
+      }
+    })
+
+    return i
+  }
+
+  if (!isCustomEvent(event) && moreThanOnePossibleTargets(event)) {
+    // if we find more than one element matching the selection criteria we defined,
+    // let's find the index of that element
+    return {
+      ...ourEvent,
+      targetIndex: findIndexOfTargetInPossibleCandidates(event)
+    }
+  } else {
+    return ourEvent
+  }
+}
+
 function testGenerator(Component) {
   return class TestGeneratorComponent extends React.Component {
     events = []
@@ -71,7 +149,7 @@ function testGenerator(Component) {
       if (shallowDiffers(this.props, nextProps)) {
         this.events.push({
           eventFromTestGenerator: true,
-          type: "componentWillReceiveProps",
+          type: customEvents.COMPONENT_WILL_RECEIVE_PROPS,
           nextProps
         })
       }
@@ -150,31 +228,10 @@ function testGenerator(Component) {
       }
       // only record event if the target element is also listening on the same event
       if (
-        (targetListeningOnEvent(eventName, event) ||
-          event.eventFromTestGenerator) &&
+        (targetListeningOnEvent(eventName, event) || isCustomEvent(event)) &&
         targetNotEventWrapper(event, this.eventWrapperRef)
       ) {
-        this.events.push({
-          type: event.type,
-          key: event.key,
-          keyCode: event.keyCode,
-          which: event.which,
-          ...allEvents[eventName].reduce(
-            (acc, propName) => ({
-              ...acc,
-              [propName]: event[propName]
-            }),
-            {}
-          ),
-          target: {
-            "data-test-id": event.target.getAttribute("data-test-id"),
-            id: event.target.getAttribute("id"),
-            tagName: event.target.tagName,
-            value: event.target.value,
-            checked: event.target.checked,
-            type: event.target && event.target.type
-          }
-        })
+        this.events.push(createEventObject(eventName, event))
       }
     }
 

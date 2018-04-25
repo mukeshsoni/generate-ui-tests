@@ -11,16 +11,25 @@ import stringifyObject from "stringify-object"
 // Maybe we should check if there are multiple targets with same data-test-id
 // and find the index of the target on which the event was generated
 // has to be done during event capture phase, i.e. in recordEvent method of top index.js
-function getFindSelector(event) {
-  const id = event.target && event.target.id
-  const dataTestId = event.target && event.target["data-test-id"]
+export function getFindSelector(event) {
+  const id =
+    event.target && event.target.getAttribute && event.target.getAttribute("id")
+  const dataTestId =
+    event.target &&
+    event.target.getAttribute &&
+    event.target.getAttribute("data-test-id")
 
   if (id) {
     return `#${id}`
   } else if (dataTestId) {
     return `[data-test-id="${dataTestId}"]`
   } else {
-    return event.target.tagName.toLowerCase()
+    if (event && event.target && event.target.tagName) {
+      return event.target.tagName.toLowerCase()
+    } else {
+      console.error("can't find selector for events without targets")
+      return "COULD_NOT_FIND_SELECTOR"
+    }
   }
 }
 
@@ -34,7 +43,7 @@ function testCommandsForFindAndSimulate(event) {
         event.clipboardData
       }})`
 
-    case "componentWillReceiveProps":
+    case "COMPONENT_WILL_RECEIVE_PROPS":
       return `  wrapper.setProps(${indentAllLines(
         stringifyObject(event.nextProps, {
           indent: "  ",
@@ -44,10 +53,18 @@ function testCommandsForFindAndSimulate(event) {
       )})`
     case "input":
     case "change":
-      return `  wrapper.find('${getFindSelector(event)}')
+      if (Number.isInteger(event.targetIndex)) {
+        return `  wrapper.find('${getFindSelector(event)}')
+                      .at(${event.targetIndex})
                       .simulate('${event.type}', {target: {value: "${
-        event.target.value
-      }", checked: ${event.target.checked}}})`
+          event.target.value
+        }", checked: ${event.target.checked}}})`
+      } else {
+        return `  wrapper.find('${getFindSelector(event)}')
+                      .simulate('${event.type}', {target: {value: "${
+          event.target.value
+        }", checked: ${event.target.checked}}})`
+      }
     case "keydown":
       return `  wrapper.find('${getFindSelector(
         event
@@ -164,7 +181,7 @@ test('${testName}', () => {
     .slice(startIndex, stopIndex + 1)
     .map(testCommandsForFindAndSimulate)
     .reduce(removeEmptyStrings, [])
-    .reduce(squashSimilarConsecutiveEvents, [])
+    // .reduce(squashSimilarConsecutiveEvents, [])
     .join("\n")
 
   const end = `\n  expect(toJson(wrapper)).toMatchSnapshot()
