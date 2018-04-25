@@ -1,9 +1,17 @@
 import React from "react"
 import "./simple_button.css"
 
-const SimpleButton = ({ onClick, children, ...otherProps }) => {
+const SimpleButton = ({
+  type = "secondary",
+  onClick,
+  children,
+  ...otherProps
+}) => {
+  const classNames =
+    type === "secondary" ? "simple-button" : "simple-button primary"
+
   return (
-    <button className="simple-button" onClick={onClick} {...otherProps}>
+    <button className={classNames} onClick={onClick} {...otherProps}>
       {children}
     </button>
   )

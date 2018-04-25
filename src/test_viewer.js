@@ -115,18 +115,19 @@ export const TestViewerContainer = props => {
                   value={testName}
                   style={{
                     marginRight: 10,
-                    padding: "0.15em 0.3em",
+                    padding: "0.3em 0.6em",
                     fontSize: "1.2em",
                     maxWidth: 200
                   }}
                 />
                 <SimpleButton
+                  type="primary"
                   style={{ marginRight: 10 }}
                   onClick={onStartTestGeneration}
                 >
                   Start from now
                 </SimpleButton>
-                <SimpleButton onClick={onStopTestGeneration}>
+                <SimpleButton type="primary" onClick={onStopTestGeneration}>
                   Get test
                 </SimpleButton>
               </div>

@@ -1,15 +1,10 @@
 {
   "name": "generate-ui-tests",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "generate-ui-tests React component",
   "main": "lib/index.js",
   "module": "es/index.js",
-  "files": [
-    "css",
-    "es",
-    "lib",
-    "umd"
-  ],
+  "files": ["css", "es", "lib", "umd"],
   "scripts": {
     "build": "nwb build-react-component --copy-files",
     "clean": "nwb clean-module && nwb clean-demo",
@@ -21,9 +16,7 @@
     "deploy": "gh-pages -d demo/dist"
   },
   "jest": {
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ],
+    "snapshotSerializers": ["enzyme-to-json/serializer"],
     "transform": {
       "^.+\\.js$": "./jest.transform.js"
     },
@@ -61,7 +54,5 @@
   "homepage": "",
   "license": "MIT",
   "repository": "",
-  "keywords": [
-    "react-component"
-  ]
+  "keywords": ["react-component"]
 }

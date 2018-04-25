@@ -15,6 +15,12 @@
   display: inline-block;
 }
 
+.simple-button.primary {
+  background-color: #9a2b54;
+  color: white;
+  font-size: 1.2em;
+}
+
 .pure-button-hover,
 .simple-button:hover,
 .simple-button:focus {
