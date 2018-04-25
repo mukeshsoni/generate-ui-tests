@@ -4,7 +4,12 @@
   "description": "generate-ui-tests React component",
   "main": "lib/index.js",
   "module": "es/index.js",
-  "files": ["css", "es", "lib", "umd"],
+  "files": [
+    "css",
+    "es",
+    "lib",
+    "umd"
+  ],
   "scripts": {
     "build": "nwb build-react-component --copy-files",
     "clean": "nwb clean-module && nwb clean-demo",
@@ -13,10 +18,13 @@
     "test: coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "test:coverage": "nwb test-react --coverage",
+    "cypress:open": "cypress open",
     "deploy": "gh-pages -d demo/dist"
   },
   "jest": {
-    "snapshotSerializers": ["enzyme-to-json/serializer"],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
     "transform": {
       "^.+\\.js$": "./jest.transform.js"
     },
@@ -40,6 +48,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "cypress": "^2.1.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.3.3",
@@ -54,5 +63,7 @@
   "homepage": "",
   "license": "MIT",
   "repository": "https://github.com/mukeshsoni/generate-ui-tests",
-  "keywords": ["react-component"]
+  "keywords": [
+    "react-component"
+  ]
 }
