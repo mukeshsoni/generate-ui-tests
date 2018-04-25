@@ -53,6 +53,6 @@
   "author": "",
   "homepage": "",
   "license": "MIT",
-  "repository": "",
+  "repository": "https://github.com/mukeshsoni/generate-ui-tests",
   "keywords": ["react-component"]
 }
