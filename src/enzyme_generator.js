@@ -1,12 +1,21 @@
 import stringifyObject from "stringify-object"
 import { getFindSelector, removeEmptyStrings } from "./utils/selector"
 
+function getFinderString(event) {
+  if (Number.isInteger(event.targetIndex)) {
+    return `  wrapper.find('${getFindSelector(event)}')
+         .at(${event.targetIndex})`
+  } else {
+    return `  wrapper.find('${getFindSelector(event)}')`
+  }
+}
+
 function testCommandsForFindAndSimulate(event) {
   switch (event.type) {
     case "copy":
     case "cut":
     case "paste":
-      return `  wrapper.find('${getFindSelector(event)}')
+      return `${getFinderString(event)}
                        .simulate('${event.type}', {clipboardData: ${
         event.clipboardData
       }})`
@@ -21,58 +30,45 @@ function testCommandsForFindAndSimulate(event) {
       )})`
     case "input":
     case "change":
-      if (Number.isInteger(event.targetIndex)) {
-        return `  wrapper.find('${getFindSelector(event)}')
-                      .at(${event.targetIndex})
-                      .simulate('${event.type}', {target: {value: "${
-          event.target.value
-        }", checked: ${event.target.checked}}})`
-      } else {
-        return `  wrapper.find('${getFindSelector(event)}')
-                      .simulate('${event.type}', {target: {value: "${
-          event.target.value
-        }", checked: ${event.target.checked}}})`
-      }
+      return `${getFinderString(event)}
+         .simulate('${event.type}', {target: {value: "${
+        event.target.value
+      }", checked: ${event.target.checked}}})`
     case "keydown":
-      return `  wrapper.find('${getFindSelector(
-        event
-      )}').simulate('keyDown', {keyCode: ${event.keyCode}, which: ${
+      return `${getFinderString(event)}
+         .simulate('keyDown', {keyCode: ${event.keyCode}, which: ${
         event.which
       }})`
     case "keyup":
-      return `  wrapper.find('${getFindSelector(
-        event
-      )}').simulate('keyUp', {keyCode: ${event.keyCode}, which: ${
-        event.which
-      }})`
+      return `${getFinderString(event)}
+         .simulate('keyUp', {keyCode: ${event.keyCode}, which: ${event.which}})`
     case "keypress":
-      return `  wrapper.find('${getFindSelector(
-        event
-      )}').simulate('keyPress', {keyCode: ${event.keyCode}, which: ${
+      return `${getFinderString(event)}
+         .simulate('keyPress', {keyCode: ${event.keyCode}, which: ${
         event.which
       }})`
     case "click":
     case "focus":
     case "blur":
-      return `  wrapper.find('${getFindSelector(event)}')
-           .simulate('${event.type}')`
+      return `${getFinderString(event)}
+         .simulate('${event.type}')`
     case "dblclick":
-      return `  wrapper.find('${getFindSelector(event)}')
-           .simulate('doubleClick')`
+      return `${getFinderString(event)}
+         .simulate('doubleClick')`
     case "mousedown":
-      return `  wrapper.find('${getFindSelector(event)}')
-           .simulate('mouseDown')`
+      return `${getFinderString(event)}
+         .simulate('mouseDown')`
     case "mouseup":
-      return `  wrapper.find('${getFindSelector(event)}')
-           .simulate('mouseUp')`
+      return `${getFinderString(event)}
+         .simulate('mouseUp')`
     case "mouseenter":
-      return `  wrapper.find('${getFindSelector(event)}')
-           .simulate('mouseEnter')`
+      return `${getFinderString(event)}
+         .simulate('mouseEnter')`
     case "mouseleave":
-      return `  wrapper.find('${getFindSelector(event)}')
-           .simulate('mouseLeave')`
+      return `${getFinderString(event)}
+         .simulate('mouseLeave')`
     default:
-      return `  wrapper.find('${getFindSelector(event)}')
+      return `${getFinderString(event)}
          .simulate('${event.type}')`
   }
 }
