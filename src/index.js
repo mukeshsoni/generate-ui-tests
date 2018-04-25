@@ -55,7 +55,8 @@ function testGenerator(Component) {
       eventStartIndex: 0,
       eventStopIndex: 0,
       generatedTest: "",
-      errorHappened: false
+      errorHappened: false,
+      testName: "Interaction test 1"
     }
     initialProps = null
     eventWrapperRef = null
@@ -78,7 +79,7 @@ function testGenerator(Component) {
 
     componentDidCatch = (error, info) => {
       console.log("error somewhere in the component tree")
-      this.setState({ errorHappened: true })
+      this.setState({ errorHappened: true, testName: "Breaking test" })
     }
 
     startTestGenertion = () => {
@@ -91,6 +92,7 @@ function testGenerator(Component) {
       const eventStopIndex = this.events.length
 
       const testString = getTestString(
+        this.state.testName,
         this.initialProps,
         Component.name,
         this.events,
@@ -176,6 +178,10 @@ function testGenerator(Component) {
       }
     }
 
+    handleTestNameChange = event => {
+      this.setState({ testName: event.target.value })
+    }
+
     render() {
       if (this.state.errorHappened) {
         return (
@@ -185,12 +191,12 @@ function testGenerator(Component) {
             </h3>
             <TestViewer
               testString={getTestString(
+                this.state.testName,
                 this.initialProps,
                 Component.name,
                 this.events,
                 this.state.startIndex,
-                this.events.length - 1,
-                true
+                this.events.length - 1
               )}
             />
           </div>
@@ -212,6 +218,8 @@ function testGenerator(Component) {
               onGetTestClick={this.stopTestGenertion}
               onStartTestGeneration={this.startTestGenertion}
               onStopTestGeneration={this.stopTestGenertion}
+              testName={this.state.testName}
+              onTestNameChange={this.handleTestNameChange}
             />
           </div>
         </div>

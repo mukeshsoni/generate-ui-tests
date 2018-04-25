@@ -76,6 +76,14 @@ export class TestViewer extends React.Component {
 }
 
 export const TestViewerContainer = props => {
+  const {
+    componentName,
+    onTestNameChange,
+    testName,
+    onStartTestGeneration,
+    onStopTestGeneration
+  } = props
+
   return (
     <Portal>
       <Draggable defaultPosition={{ x: 0, y: 0 }} handle=".drag-handle">
@@ -83,7 +91,7 @@ export const TestViewerContainer = props => {
           style={{ position: "absolute", right: 30, top: 30, minWidth: 500 }}
         >
           <Collapsible
-            trigger={<CollapsibleHeader componentName={props.componentName} />}
+            trigger={<CollapsibleHeader componentName={componentName} />}
             transitionTime={100}
             lazyRender
             open
@@ -95,16 +103,30 @@ export const TestViewerContainer = props => {
                   justifyContent: "flex-end",
                   padding: 10,
                   backgroundColor: "#083045",
-                  color: "white"
+                  color: "white",
+                  alignItems: "center"
                 }}
               >
+                <label style={{ marginRight: 10, fontSize: "1.2em" }}>
+                  Test Name
+                </label>
+                <input
+                  onChange={onTestNameChange}
+                  value={testName}
+                  style={{
+                    marginRight: 10,
+                    padding: "0.15em 0.3em",
+                    fontSize: "1.2em",
+                    maxWidth: 200
+                  }}
+                />
                 <SimpleButton
                   style={{ marginRight: 10 }}
-                  onClick={props.onStartTestGeneration}
+                  onClick={onStartTestGeneration}
                 >
                   Start from now
                 </SimpleButton>
-                <SimpleButton onClick={props.onStopTestGeneration}>
+                <SimpleButton onClick={onStopTestGeneration}>
                   Get test
                 </SimpleButton>
               </div>

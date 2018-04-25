@@ -135,6 +135,7 @@ function removeEmptyStrings(acc, str) {
 }
 
 export function getTestString(
+  testName,
   initialProps,
   componentName,
   events,
@@ -146,7 +147,7 @@ export function getTestString(
 import toJson, {createSerializer} from 'enzyme-to-json';
 expect.addSnapshotSerializer(createSerializer({mode: 'deep'}));
     
-test('${errorCase ? "breaking test" : "interaction test 1"}', () => {
+test('${testName}', () => {
   const props = ${indentAllLines(
     stringifyObject(initialProps, {
       indent: "  ",
