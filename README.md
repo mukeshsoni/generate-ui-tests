@@ -65,6 +65,19 @@ You will probably need to install these to get the generated tests running -
 $ npm install jest babel-jest enzyme enzyme-adapter-react-16 enzyme-to-json babel-core --save-dev
 ```
 
+### Contribute or just try it out
+
+If you want to contribute to the library -
+
+```
+$ git clone https://github.com/mukeshsoni/generate-ui-tests
+$ cd generate-ui-tests
+$ npm install
+$ npm start
+```
+
+Open your browser and go to `http://localhost:3000`
+
 [build-badge]: https://img.shields.io/travis/mukeshsoni/generate-ui-tests/master.png?style=flat-square
 [build]: https://travis-ci.org/mukeshsoni/generate-ui-tests
 [npm-badge]: https://img.shields.io/npm/v/generate-ui-tests.svg?style=flat-square
