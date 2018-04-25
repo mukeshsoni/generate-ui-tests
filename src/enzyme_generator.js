@@ -10,67 +10,85 @@ function getFinderString(event) {
   }
 }
 
-function testCommandsForFindAndSimulate(event) {
+/**
+ * Generates the event simulation part of the string.
+ * E.g. for a click event it generates "simulate('click')"
+ * @param {Object} event
+ */
+function getSimulationString(event) {
   switch (event.type) {
     case "copy":
     case "cut":
     case "paste":
-      return `${getFinderString(event)}
-                       .simulate('${event.type}', {clipboardData: ${
+      return `simulate('${event.type}', {clipboardData: ${
         event.clipboardData
       }})`
-
-    case "COMPONENT_WILL_RECEIVE_PROPS":
-      return `  wrapper.setProps(${indentAllLines(
-        stringifyObject(event.nextProps, {
-          indent: "  ",
-          inlineCharacterLimit: 12
-        }),
-        1
-      )})`
     case "input":
     case "change":
-      return `${getFinderString(event)}
-         .simulate('${event.type}', {target: {value: "${
+      return `simulate('${event.type}', {target: {value: "${
         event.target.value
       }", checked: ${event.target.checked}}})`
     case "keydown":
-      return `${getFinderString(event)}
-         .simulate('keyDown', {keyCode: ${event.keyCode}, which: ${
+      return `simulate('keyDown', {keyCode: ${event.keyCode}, which: ${
         event.which
       }})`
     case "keyup":
-      return `${getFinderString(event)}
-         .simulate('keyUp', {keyCode: ${event.keyCode}, which: ${event.which}})`
+      return `simulate('keyUp', {keyCode: ${event.keyCode}, which: ${
+        event.which
+      }})`
     case "keypress":
-      return `${getFinderString(event)}
-         .simulate('keyPress', {keyCode: ${event.keyCode}, which: ${
+      return `simulate('keyPress', {keyCode: ${event.keyCode}, which: ${
         event.which
       }})`
     case "click":
     case "focus":
     case "blur":
-      return `${getFinderString(event)}
-         .simulate('${event.type}')`
+      return `simulate('${event.type}')`
     case "dblclick":
-      return `${getFinderString(event)}
-         .simulate('doubleClick')`
+      return `simulate('doubleClick')`
     case "mousedown":
-      return `${getFinderString(event)}
-         .simulate('mouseDown')`
+      return `simulate('mouseDown')`
     case "mouseup":
-      return `${getFinderString(event)}
-         .simulate('mouseUp')`
+      return `simulate('mouseUp')`
     case "mouseenter":
-      return `${getFinderString(event)}
-         .simulate('mouseEnter')`
+      return `simulate('mouseEnter')`
     case "mouseleave":
-      return `${getFinderString(event)}
-         .simulate('mouseLeave')`
+      return `simulate('mouseLeave')`
     default:
-      return `${getFinderString(event)}
-         .simulate('${event.type}')`
+      return `simulate('${event.type}')`
   }
+}
+
+/**
+ * A complete event simulation string in enzyme will consist of two parts
+ * 1. Selector
+ * 2. Event simulation
+ * This function just glues the two together
+ * @param {Object} event
+ */
+function testCommandForDOMEvents(event) {
+  const simulationString = getSimulationString(event)
+
+  if (!simulationString) {
+    return ""
+  } else {
+    return `${getFinderString(event)}
+         .${simulationString}`
+  }
+}
+
+function testCommandsForFindAndSimulate(event) {
+  if (event.type === "COMPONENT_WILL_RECEIVE_PROPS") {
+    return `  wrapper.setProps(${indentAllLines(
+      stringifyObject(event.nextProps, {
+        indent: "  ",
+        inlineCharacterLimit: 12
+      }),
+      1
+    )})`
+  }
+
+  return testCommandForDOMEvents(event)
 }
 
 /**
