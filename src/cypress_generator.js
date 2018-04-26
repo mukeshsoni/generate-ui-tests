@@ -46,22 +46,13 @@ function testCommandsForFindAndSimulate(event) {
   }
 }
 
-export function getTestString(
-  testName,
-  initialProps,
-  componentName,
-  events,
-  startIndex,
-  stopIndex,
-  errorCase
-) {
+export function getTestString(testName, initialProps, componentName, events) {
   const begin = `describe('${testName}', () => {
   it('should pass', () => {
     cy.visit('/')
 `
 
   const findAndSimulateCommands = events
-    .slice(startIndex, stopIndex + 1)
     .map(testCommandsForFindAndSimulate)
     .reduce(removeEmptyStrings, [])
     //     // .reduce(squashSimilarConsecutiveEvents, [])

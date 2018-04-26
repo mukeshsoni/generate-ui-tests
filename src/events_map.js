@@ -127,3 +127,5 @@ export const allEvents = Object.entries(eventsMap)
       )
     }
   }, {})
+
+export const allEventNames = Object.keys(allEvents)

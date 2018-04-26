@@ -130,15 +130,7 @@ function indentAllLines(str, indentTimes = 1) {
   return newStr
 }
 
-export function getTestString(
-  testName,
-  initialProps,
-  componentName,
-  events,
-  startIndex,
-  stopIndex,
-  errorCase
-) {
+export function getTestString(testName, initialProps, componentName, events) {
   const begin = `const { mount } = require('enzyme')
 import toJson, {createSerializer} from 'enzyme-to-json';
 expect.addSnapshotSerializer(createSerializer({mode: 'deep'}));
@@ -157,8 +149,7 @@ test('${testName}', () => {
 `
 
   const findAndSimulateCommands = events
-    .slice(startIndex, stopIndex + 1)
-    .reduce(squashSimilarConsecutiveEvents, [])
+    // .reduce(squashSimilarConsecutiveEvents, [])
     .map(testCommandsForFindAndSimulate)
     .reduce(removeEmptyStrings, [])
     .join("\n")

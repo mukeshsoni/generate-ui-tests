@@ -1,9 +1,12 @@
 import React from "react"
+import Modal from "react-modal"
+import Switch from "react-switch"
 import { TestViewer, TestViewerContainer } from "./test_viewer"
 import { getTestString } from "./enzyme_generator"
 import { getFindSelector } from "./utils/selector"
-import { allEvents } from "./events_map"
+import { allEvents, allEventNames } from "./events_map"
 import "./base.css"
+import SimpleButton from "./simple_button"
 
 function eventHasTarget(event) {
   return event.target
@@ -65,6 +68,7 @@ function createEventObject(eventName, event) {
   let dataTestId = event.target && event.target.getAttribute("data-test-id")
 
   const ourEvent = {
+    name: eventName,
     type: event.type,
     key: event.key,
     keyCode: event.keyCode,
@@ -126,14 +130,14 @@ function createEventObject(eventName, event) {
 function testGenerator(Component) {
   return class TestGeneratorComponent extends React.Component {
     events = []
-    eventStartIndex = 0
-    eventStopIndex = 0
     state = {
-      eventStartIndex: 0,
-      eventStopIndex: 0,
       generatedTest: "",
       errorHappened: false,
-      testName: "Interaction test 1"
+      testName: "Interaction test 1",
+      showExcludeModal: false,
+      excludedEvents: [],
+      excludeEventSearchString: "",
+      excludeEventsSearchFilter: "all"
     }
     initialProps = null
     eventWrapperRef = null
@@ -160,31 +164,26 @@ function testGenerator(Component) {
     }
 
     startTestGenertion = () => {
-      this.setState({
-        eventStartIndex: this.events.length
-      })
+      this.events = []
     }
 
     stopTestGenertion = () => {
-      const eventStopIndex = this.events.length
-
       const testString = getTestString(
         this.state.testName,
         this.initialProps,
         Component.name,
-        this.events,
-        this.state.eventStartIndex,
-        eventStopIndex
+        this.events.filter(
+          event => !this.state.excludedEvents.includes(event.name)
+        )
       )
 
       this.setState({
-        generatedTest: testString,
-        eventStopIndex
+        generatedTest: testString
       })
     }
 
     getEventHandlers() {
-      const eventHandlers = Object.keys(allEvents).reduce((acc, eventName) => {
+      const eventHandlers = allEventNames.reduce((acc, eventName) => {
         return {
           ...acc,
           [eventToCaptureClickHandlerMapping(eventName)]: this.recordEvent.bind(
@@ -238,8 +237,43 @@ function testGenerator(Component) {
       this.setState({ testName: event.target.value })
     }
 
+    handleExcludeClick = () => {
+      this.setState({ showExcludeModal: true })
+    }
+
+    handleEventExcludeChange = (eventName, checked) => {
+      const { excludedEvents } = this.state
+
+      if (!checked) {
+        this.setState({
+          excludedEvents: excludedEvents.concat(eventName)
+        })
+      } else {
+        const index = excludedEvents.indexOf(eventName)
+
+        if (index >= 0) {
+          this.setState({
+            excludedEvents: [
+              ...excludedEvents.slice(0, index),
+              ...excludedEvents.slice(index + 1)
+            ]
+          })
+        }
+      }
+    }
+
     render() {
-      if (this.state.errorHappened) {
+      const {
+        errorHappened,
+        excludeEventsSearchFilter,
+        excludedEvents,
+        excludeEventSearchString,
+        testName,
+        showExcludeModal,
+        generatedTest
+      } = this.state
+
+      if (errorHappened) {
         return (
           <div style={{ marginTop: 10 }}>
             <h3 style={{ marginBottom: 20 }}>
@@ -247,12 +281,12 @@ function testGenerator(Component) {
             </h3>
             <TestViewer
               testString={getTestString(
-                this.state.testName,
+                testName,
                 this.initialProps,
                 Component.name,
-                this.events,
-                this.state.startIndex,
-                this.events.length - 1
+                this.events.filter(
+                  event => !excludedEvents.includes(event.name)
+                )
               )}
             />
           </div>
@@ -270,14 +304,159 @@ function testGenerator(Component) {
           <div style={{ marginTop: 20 }}>
             <TestViewerContainer
               componentName={Component.name}
-              testString={this.state.generatedTest}
+              testString={generatedTest}
               onGetTestClick={this.stopTestGenertion}
               onStartTestGeneration={this.startTestGenertion}
               onStopTestGeneration={this.stopTestGenertion}
-              testName={this.state.testName}
+              testName={testName}
               onTestNameChange={this.handleTestNameChange}
+              onExcludeClick={this.handleExcludeClick}
+              excludedEvents={excludedEvents}
             />
           </div>
+          <Modal
+            isOpen={showExcludeModal}
+            onRequestClose={() =>
+              this.setState({
+                showExcludeModal: false,
+                excludeEventSearchString: ""
+              })
+            }
+            style={{
+              overlay: {},
+              content: {
+                width: "50%",
+                margin: "auto",
+                padding: 30
+              }
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between"
+              }}
+            >
+              <h3 style={{ maxWidth: "80%" }}>
+                Toggle switch to exclude an event. Green means it's included.
+              </h3>
+              <SimpleButton
+                onClick={() =>
+                  this.setState({
+                    showExcludeModal: false,
+                    excludeEventSearchString: ""
+                  })
+                }
+              >
+                close
+              </SimpleButton>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: 10
+              }}
+            >
+              <div>
+                <input
+                  style={{
+                    padding: "0.3em 0.6em",
+                    marginBottom: 5
+                  }}
+                  onChange={e =>
+                    this.setState({ excludeEventSearchString: e.target.value })
+                  }
+                  value={excludeEventSearchString}
+                />
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center" }}
+                data-test-id="src_footer_test_id_2"
+              >
+                <div style={{ marginRight: 10 }}>
+                  {excludedEvents.length} events excluded
+                </div>
+                <a
+                  onClick={() =>
+                    this.setState({ excludeEventsSearchFilter: "all" })
+                  }
+                  style={{
+                    margin: 3,
+                    padding: "3px 7px",
+                    textDecoration: "none",
+                    border:
+                      excludeEventsSearchFilter === "all"
+                        ? "1px solid black"
+                        : "none",
+                    borderRadius: 3,
+                    cursor: "pointer"
+                  }}
+                >
+                  All
+                </a>
+                <a
+                  onClick={() =>
+                    this.setState({ excludeEventsSearchFilter: "excluded" })
+                  }
+                  style={{
+                    margin: 3,
+                    padding: "3px 7px",
+                    textDecoration: "none",
+                    border:
+                      excludeEventsSearchFilter === "excluded"
+                        ? "1px solid black"
+                        : "none",
+                    borderRadius: 3,
+                    cursor: "pointer"
+                  }}
+                  data-test-id="src_footer_test_id_4"
+                >
+                  Excluded
+                </a>
+              </div>
+            </div>
+            <ul style={{ padding: 0 }}>
+              {allEventNames
+                .filter(eventName =>
+                  eventName
+                    .toLowerCase()
+                    .includes(excludeEventSearchString.toLocaleLowerCase())
+                )
+                .filter(
+                  eventName =>
+                    excludeEventsSearchFilter === "all" ||
+                    excludedEvents.includes(eventName)
+                )
+                .map((eventName, index) => {
+                  return (
+                    <li
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        padding: "0.5em 0.6em",
+                        borderBottom: "1px solid #eee"
+                      }}
+                      key={"exclude_list_item_" + index}
+                    >
+                      <Switch
+                        onChange={this.handleEventExcludeChange.bind(
+                          this,
+                          eventName
+                        )}
+                        checked={!excludedEvents.includes(eventName)}
+                        id={"switch_id_" + eventName}
+                      />
+                      <div style={{ marginLeft: 20, fontWeight: 700 }}>
+                        {eventName}
+                      </div>
+                    </li>
+                  )
+                })}
+            </ul>
+          </Modal>
         </div>
       )
     }

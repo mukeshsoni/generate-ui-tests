@@ -50,15 +50,17 @@ export class TestViewer extends React.Component {
         {testString ? (
           <div>
             <div>
-              <CopyToClipboard
-                text={testString}
-                onCopy={() => this.setState({ copiedToClipboard: true })}
-              >
-                <SimpleButton>Copy to clipboard</SimpleButton>
-              </CopyToClipboard>
-              {this.state.copiedToClipboard ? (
-                <span style={{ color: "red", marginLeft: 10 }}>Copied</span>
-              ) : null}
+              <div>
+                <CopyToClipboard
+                  text={testString}
+                  onCopy={() => this.setState({ copiedToClipboard: true })}
+                >
+                  <SimpleButton>Copy to clipboard</SimpleButton>
+                </CopyToClipboard>
+                {this.state.copiedToClipboard ? (
+                  <span style={{ color: "red", marginLeft: 10 }}>Copied</span>
+                ) : null}
+              </div>
             </div>
             <SyntaxHighlighter language="javascript" style={prism}>
               {testString}
@@ -81,7 +83,9 @@ export const TestViewerContainer = props => {
     onTestNameChange,
     testName,
     onStartTestGeneration,
-    onStopTestGeneration
+    onStopTestGeneration,
+    onExcludeClick,
+    excludedEvents
   } = props
 
   return (
@@ -96,13 +100,13 @@ export const TestViewerContainer = props => {
             lazyRender
             open
           >
-            <div>
+            <div style={{ backgroundColor: "#083045" }}>
               <div
                 style={{
                   display: "flex",
                   justifyContent: "flex-end",
                   padding: 10,
-                  backgroundColor: "#083045",
+
                   color: "white",
                   alignItems: "center"
                 }}
@@ -131,6 +135,30 @@ export const TestViewerContainer = props => {
                 <SimpleButton type="primary" onClick={onStopTestGeneration}>
                   Get test
                 </SimpleButton>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  paddingLeft: 10
+                }}
+              >
+                <a
+                  style={{
+                    cursor: "pointer",
+                    color: "white",
+                    textDecoration: "underline"
+                  }}
+                  onClick={onExcludeClick}
+                >
+                  Exclude events
+                </a>
+                <span
+                  style={{ marginLeft: 10, color: "red" }}
+                  title={excludedEvents.join(" ")}
+                >
+                  {excludedEvents.length} events excluded
+                </span>
               </div>
               <TestViewer {...props} />
             </div>
