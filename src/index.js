@@ -2,7 +2,8 @@ import React from "react"
 import Modal from "react-modal"
 import Switch from "react-switch"
 import { TestViewer, TestViewerContainer } from "./test_viewer"
-import { getTestString } from "./enzyme_generator"
+import * as enzymeGenerator from "./enzyme_generator"
+import * as cypressGenerator from "./cypress_generator"
 import { getFindSelector } from "./utils/selector"
 import { allEvents, allEventNames } from "./events_map"
 import "./base.css"
@@ -137,7 +138,8 @@ function testGenerator(Component) {
       showExcludeModal: false,
       excludedEvents: [],
       excludeEventSearchString: "",
-      excludeEventsSearchFilter: "all"
+      excludeEventsSearchFilter: "all",
+      generator: "enzyme"
     }
     initialProps = null
     eventWrapperRef = null
@@ -168,17 +170,8 @@ function testGenerator(Component) {
     }
 
     stopTestGenertion = () => {
-      const testString = getTestString(
-        this.state.testName,
-        this.initialProps,
-        Component.name,
-        this.events.filter(
-          event => !this.state.excludedEvents.includes(event.name)
-        )
-      )
-
       this.setState({
-        generatedTest: testString
+        generatedTest: this.getTestString()
       })
     }
 
@@ -233,6 +226,25 @@ function testGenerator(Component) {
       }
     }
 
+    getTestString = () => {
+      const { testName, excludedEvents } = this.state
+      if (this.state.generator === "cypress") {
+        return cypressGenerator.getTestString(
+          testName,
+          this.initialProps,
+          Component.name,
+          this.events.filter(event => !excludedEvents.includes(event.name))
+        )
+      } else {
+        return enzymeGenerator.getTestString(
+          testName,
+          this.initialProps,
+          Component.name,
+          this.events.filter(event => !excludedEvents.includes(event.name))
+        )
+      }
+    }
+
     handleTestNameChange = event => {
       this.setState({ testName: event.target.value })
     }
@@ -262,6 +274,12 @@ function testGenerator(Component) {
       }
     }
 
+    handleGeneratorChange = event => {
+      this.setState({
+        generator: event.target.value
+      })
+    }
+
     render() {
       const {
         errorHappened,
@@ -270,7 +288,8 @@ function testGenerator(Component) {
         excludeEventSearchString,
         testName,
         showExcludeModal,
-        generatedTest
+        generatedTest,
+        generator
       } = this.state
 
       if (errorHappened) {
@@ -279,16 +298,7 @@ function testGenerator(Component) {
             <h3 style={{ marginBottom: 20 }}>
               Looks like your app crashed 💣💥. This might help 👀.
             </h3>
-            <TestViewer
-              testString={getTestString(
-                testName,
-                this.initialProps,
-                Component.name,
-                this.events.filter(
-                  event => !excludedEvents.includes(event.name)
-                )
-              )}
-            />
+            <TestViewer testString={this.getTestString()} />
           </div>
         )
       }
@@ -312,6 +322,8 @@ function testGenerator(Component) {
               onTestNameChange={this.handleTestNameChange}
               onExcludeClick={this.handleExcludeClick}
               excludedEvents={excludedEvents}
+              onGeneratorChange={this.handleGeneratorChange}
+              generator={generator}
             />
           </div>
           <Modal
@@ -369,6 +381,7 @@ function testGenerator(Component) {
                     this.setState({ excludeEventSearchString: e.target.value })
                   }
                   value={excludeEventSearchString}
+                  autoFocus
                 />
               </div>
               <div

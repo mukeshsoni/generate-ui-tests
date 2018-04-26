@@ -85,7 +85,9 @@ export const TestViewerContainer = props => {
     onStartTestGeneration,
     onStopTestGeneration,
     onExcludeClick,
-    excludedEvents
+    excludedEvents,
+    onGeneratorChange,
+    generator
   } = props
 
   return (
@@ -159,6 +161,23 @@ export const TestViewerContainer = props => {
                 >
                   {excludedEvents.length} events excluded
                 </span>
+              </div>
+              <div style={{ paddingLeft: 10, marginTop: 10 }}>
+                <select
+                  name="test_generator"
+                  value={generator}
+                  onChange={onGeneratorChange}
+                >
+                  <option value="enzyme">Enzyme</option>
+                  <option value="cypress">Cypress</option>
+                </select>
+                {generator === "cypress" && (
+                  <span
+                    style={{ marginLeft: 10, fontSize: "1.2em", color: "red" }}
+                  >
+                    ** EXPERIMENTAL - BAREBONES **
+                  </span>
+                )}
               </div>
               <TestViewer {...props} />
             </div>
