@@ -91,25 +91,30 @@ function testCommandsForFindAndSimulate(event) {
   return testCommandForDOMEvents(event)
 }
 
-/**
- * multiple input change events can be flattened to single 'change' simulate call
- */
-function squashSimilarConsecutiveEvents(result, str, currentIndex, arr) {
+function isChangeEventOnTextInput(event) {
+  return event.type === "change" && event.target.type === "text"
+}
+
+// TODO - The squashing should be done at event level. We have much more information there
+// trying to do it at line level means there is already information loss
+// for e.g. there is not way to know if the test line was for a text input or a checkbox input
+// we squash the checkbox input too, which is wrong.
+function squashSimilarConsecutiveEvents(result, event, currentIndex, events) {
   if (currentIndex === 0) {
-    return [str]
+    return [event]
   }
 
   const lastResult = result[result.length - 1]
   if (
     currentIndex > 0 &&
-    str.includes(".simulate('change") &&
-    lastResult.includes(".simulate('change'")
+    isChangeEventOnTextInput(event) &&
+    isChangeEventOnTextInput(lastResult)
   ) {
     // keep the last change event on input
-    result[result.length - 1] = str
+    result[result.length - 1] = event
     return result
   } else {
-    return result.concat(str)
+    return result.concat(event)
   }
 }
 
@@ -153,9 +158,9 @@ test('${testName}', () => {
 
   const findAndSimulateCommands = events
     .slice(startIndex, stopIndex + 1)
+    .reduce(squashSimilarConsecutiveEvents, [])
     .map(testCommandsForFindAndSimulate)
     .reduce(removeEmptyStrings, [])
-    // .reduce(squashSimilarConsecutiveEvents, [])
     .join("\n")
 
   const end = `\n  expect(toJson(wrapper)).toMatchSnapshot()
