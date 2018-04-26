@@ -96,10 +96,6 @@ function createEventObject(eventName, event) {
   }
 
   function moreThanOnePossibleTargets(event) {
-    console.log(
-      "found elements",
-      document.querySelectorAll(getFindSelector(event))
-    )
     return document.querySelectorAll(getFindSelector(event)).length > 1
   }
 
@@ -112,7 +108,6 @@ function createEventObject(eventName, event) {
       }
     })
 
-    console.log("index of evented element", i)
     return i
   }
 
