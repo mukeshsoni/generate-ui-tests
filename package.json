@@ -1,6 +1,6 @@
 {
   "name": "generate-ui-tests",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "generate-ui-tests React component",
   "main": "lib/index.js",
   "module": "es/index.js",
