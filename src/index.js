@@ -155,7 +155,7 @@ function testGenerator(Component) {
       this.initialProps = { ...props }
       try {
         let excludedEvents = JSON.parse(localStorage.getItem("excluded_events"))
-        this.state.excludedEvents = excludedEvents
+        this.state.excludedEvents = excludedEvents || []
       } catch (e) {
         console.error("Error gettting excluded events from local storage", e)
       }
