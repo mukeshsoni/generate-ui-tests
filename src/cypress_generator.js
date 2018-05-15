@@ -46,7 +46,13 @@ function testCommandsForFindAndSimulate(event) {
   }
 }
 
-export function getTestString(testName, initialProps, componentName, events) {
+export function getTestString(
+  testName,
+  initialProps,
+  componentName,
+  events,
+  withImports = false
+) {
   const begin = `describe('${testName}', () => {
   it('should pass', () => {
     cy.visit('/')

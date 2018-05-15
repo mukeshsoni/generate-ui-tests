@@ -139,7 +139,8 @@ function testGenerator(Component) {
       excludedEvents: [],
       excludeEventSearchString: "",
       excludeEventsSearchFilter: "all",
-      generator: "enzyme"
+      generator: "enzyme",
+      withImports: false
     }
     initialProps = null
     eventWrapperRef = null
@@ -226,21 +227,23 @@ function testGenerator(Component) {
       }
     }
 
-    getTestString = () => {
+    getTestString = (withImports = false) => {
       const { testName, excludedEvents } = this.state
       if (this.state.generator === "cypress") {
         return cypressGenerator.getTestString(
           testName,
           this.initialProps,
           Component.name,
-          this.events.filter(event => !excludedEvents.includes(event.name))
+          this.events.filter(event => !excludedEvents.includes(event.name)),
+          withImports
         )
       } else {
         return enzymeGenerator.getTestString(
           testName,
           this.initialProps,
           Component.name,
-          this.events.filter(event => !excludedEvents.includes(event.name))
+          this.events.filter(event => !excludedEvents.includes(event.name)),
+          withImports
         )
       }
     }
@@ -280,6 +283,13 @@ function testGenerator(Component) {
       })
     }
 
+    handleWithImportsChange = event => {
+      this.setState({
+        withImports: event.target.checked,
+        generatedTest: this.getTestString(event.target.checked)
+      })
+    }
+
     render() {
       const {
         errorHappened,
@@ -289,7 +299,8 @@ function testGenerator(Component) {
         testName,
         showExcludeModal,
         generatedTest,
-        generator
+        generator,
+        withImports
       } = this.state
 
       if (errorHappened) {
@@ -298,7 +309,11 @@ function testGenerator(Component) {
             <h3 style={{ marginBottom: 20 }}>
               Looks like your app crashed 💣💥. This might help 👀.
             </h3>
-            <TestViewer testString={this.getTestString()} />
+            <TestViewer
+              testString={this.getTestString(this.state.withImports)}
+              onWithImportsChange={this.handleWithImportsChange}
+              withImports={withImports}
+            />
           </div>
         )
       }
@@ -324,6 +339,8 @@ function testGenerator(Component) {
               excludedEvents={excludedEvents}
               onGeneratorChange={this.handleGeneratorChange}
               generator={generator}
+              withImports={withImports}
+              onWithImportsChange={this.handleWithImportsChange}
             />
           </div>
           <Modal

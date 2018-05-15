@@ -43,7 +43,7 @@ export class TestViewer extends React.Component {
   }
 
   render() {
-    const { testString, onGetTestClick } = this.props
+    const { testString, onGetTestClick, withImports } = this.props
 
     return (
       <div style={{ padding: 15, backgroundColor: "#083045", color: "white" }}>
@@ -60,6 +60,14 @@ export class TestViewer extends React.Component {
                 {this.state.copiedToClipboard ? (
                   <span style={{ color: "red", marginLeft: 10 }}>Copied</span>
                 ) : null}
+                <input
+                  type="checkbox"
+                  checked={this.props.withImports}
+                  value="With exports"
+                  style={{ marginLeft: 10 }}
+                  onChange={this.props.onWithImportsChange}
+                />{" "}
+                With exports
               </div>
             </div>
             <SyntaxHighlighter language="javascript" style={prism}>
@@ -99,7 +107,6 @@ export const TestViewerContainer = props => {
           <Collapsible
             trigger={<CollapsibleHeader componentName={componentName} />}
             transitionTime={100}
-            lazyRender
             open
           >
             <div style={{ backgroundColor: "#083045" }}>

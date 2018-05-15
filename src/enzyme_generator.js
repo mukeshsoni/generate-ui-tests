@@ -130,15 +130,21 @@ function indentAllLines(str, indentTimes = 1) {
   return newStr
 }
 
-export function getTestString(testName, initialProps, componentName, events) {
-  const begin = `import Enzyme, { mount } from 'enzyme'
+export function getTestString(
+  testName,
+  initialProps,
+  componentName,
+  events,
+  withImports = false
+) {
+  const importStatements = `import Enzyme, { mount } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import toJson, {createSerializer} from 'enzyme-to-json';
-
+  
 Enzyme.configure({ adapter: new Adapter() })
-expect.addSnapshotSerializer(createSerializer({mode: 'deep'}));
-    
-test('${testName}', () => {
+expect.addSnapshotSerializer(createSerializer({mode: 'deep'}));`
+
+  const begin = `test('${testName}', () => {
   const props = ${indentAllLines(
     stringifyObject(initialProps, {
       indent: "  ",
@@ -160,5 +166,9 @@ test('${testName}', () => {
   const end = `\n  expect(toJson(wrapper)).toMatchSnapshot()
 })`
 
-  return begin + findAndSimulateCommands + end
+  if (withImports) {
+    return importStatements + "\n\n" + begin + findAndSimulateCommands + end
+  } else {
+    return begin + findAndSimulateCommands + end
+  }
 }
