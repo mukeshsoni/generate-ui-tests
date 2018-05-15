@@ -20,7 +20,7 @@ export function getFindSelector(event) {
   if (id) {
     return `#${id}`
   } else if (dataTestId) {
-    return `[data-test-id="${dataTestId}"]`
+    return `${event.target.tagName.toLowerCase()}[data-test-id="${dataTestId}"]`
   } else {
     if (event && event.target && event.target.tagName) {
       return event.target.tagName.toLowerCase()
