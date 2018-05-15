@@ -407,6 +407,7 @@ function testGenerator(Component) {
                 padding: 30
               }
             }}
+            ariaHideApp={false}
           >
             <div
               style={{
