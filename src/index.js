@@ -55,6 +55,10 @@ const customEvents = {
   COMPONENT_WILL_RECEIVE_PROPS: "COMPONENT_WILL_RECEIVE_PROPS"
 }
 
+/**
+ * events which we throw - like throwing an event for componentWillReceiveProp lifecycle method being called
+ * @param {Object} event
+ */
 function isCustomEvent(event) {
   return Object.values(customEvents).includes(event.type)
 }
@@ -149,6 +153,12 @@ function testGenerator(Component) {
       super(props)
 
       this.initialProps = { ...props }
+      try {
+        let excludedEvents = JSON.parse(localStorage.getItem("excluded_events"))
+        this.state.excludedEvents = excludedEvents
+      } catch (e) {
+        console.error("Error gettting excluded events from local storage", e)
+      }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -164,6 +174,20 @@ function testGenerator(Component) {
     componentDidCatch = (error, info) => {
       console.log("error somewhere in the component tree")
       this.setState({ errorHappened: true, testName: "Breaking test" })
+    }
+
+    componentDidMount() {
+      // document.addEventListener(
+      //   "keydown",
+      //   this.recordEvent.bind(this, "keyDown")
+      // )
+    }
+
+    componentWillUnmount() {
+      // document.removeEventListener(
+      //   "keydown",
+      //   this.recordEvent.bind(this, "keyDown")
+      // )
     }
 
     startTestGenertion = () => {
@@ -191,7 +215,7 @@ function testGenerator(Component) {
     }
 
     recordEvent = (eventName, event) => {
-      function targetListeningOnEvent(eventName, event) {
+      function targetListeningOnEvent(eventName, event, eventWrapperRef) {
         // the event object has a weird property named something like '__reactEventHandlers$<random_chars>
         // which contains info about the input as setup in jsx
         // so it includes the event handlers setup in jsx by the user - like onKeyDown, onClick etc.
@@ -200,30 +224,40 @@ function testGenerator(Component) {
         )[0]
 
         if (reactEventObjectProp) {
-          // return Object.keys(event.target[reactEventObjectProp]).some(
-          //   propName =>
-          //     propName.toLowerCase().includes(eventName.toLowerCase()) &&
-          //     typeof event.target[reactEventObjectProp][propName] === "function"
+          // sometimes user might have setup click handling (or any other handling)
+          // on a parent and the actual event happens on a leaf element
+          // in that case what we get as event.target is not what the user has attached the handler on
+          // we were filtering those events, even though they are important
+          // need a more robust way of filtering those events
+          // what about checking if the element where the event occured is inside the Component we are testing
+          // that provides some filtering and hence narrowing but still rules out extraneous events
+          return eventWrapperRef && eventWrapperRef.contains(event.target) // just checks if the event happened on something inside the component we are testing
+          // return (
+          //   typeof event.target[reactEventObjectProp][
+          //     eventToClickHandlerMapping(eventName)
+          //   ] === "function"
           // )
-          return (
-            typeof event.target[reactEventObjectProp][
-              eventToClickHandlerMapping(eventName)
-            ] === "function"
-          )
         } else {
-          return false
+          // we make one exception for events happening on document body
+          // those are the ones created using document.addEventListener
+          // very common for keyboard events
+          return event.target === document.body || false
         }
       }
 
       function targetNotEventWrapper(event, eventWrapperRef) {
         return event.target !== eventWrapperRef
       }
+
       // only record event if the target element is also listening on the same event
       if (
-        (targetListeningOnEvent(eventName, event) || isCustomEvent(event)) &&
+        (targetListeningOnEvent(eventName, event, this.eventWrapperRef) ||
+          isCustomEvent(event)) &&
         targetNotEventWrapper(event, this.eventWrapperRef)
       ) {
         this.events.push(createEventObject(eventName, event))
+      } else {
+        // console.log("event rejected", eventName)
       }
     }
 
@@ -256,23 +290,36 @@ function testGenerator(Component) {
       this.setState({ showExcludeModal: true })
     }
 
+    saveExcludedItemsToLocalStorage = () => {
+      localStorage.setItem(
+        "excluded_events",
+        JSON.stringify(this.state.excludedEvents)
+      )
+    }
+
     handleEventExcludeChange = (eventName, checked) => {
       const { excludedEvents } = this.state
 
       if (!checked) {
-        this.setState({
-          excludedEvents: excludedEvents.concat(eventName)
-        })
+        this.setState(
+          {
+            excludedEvents: excludedEvents.concat(eventName)
+          },
+          this.saveExcludedItemsToLocalStorage
+        )
       } else {
         const index = excludedEvents.indexOf(eventName)
 
         if (index >= 0) {
-          this.setState({
-            excludedEvents: [
-              ...excludedEvents.slice(0, index),
-              ...excludedEvents.slice(index + 1)
-            ]
-          })
+          this.setState(
+            {
+              excludedEvents: [
+                ...excludedEvents.slice(0, index),
+                ...excludedEvents.slice(index + 1)
+              ]
+            },
+            this.saveExcludedItemsToLocalStorage
+          )
         }
       }
     }
@@ -348,7 +395,8 @@ function testGenerator(Component) {
             onRequestClose={() =>
               this.setState({
                 showExcludeModal: false,
-                excludeEventSearchString: ""
+                excludeEventSearchString: "",
+                generatedTest: this.getTestString(withImports)
               })
             }
             style={{
@@ -373,7 +421,8 @@ function testGenerator(Component) {
                 onClick={() =>
                   this.setState({
                     showExcludeModal: false,
-                    excludeEventSearchString: ""
+                    excludeEventSearchString: "",
+                    generatedTest: this.getTestString(withImports)
                   })
                 }
               >
