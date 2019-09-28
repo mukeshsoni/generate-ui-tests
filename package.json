@@ -32,7 +32,7 @@
     "react-dropdown": "^1.4.2",
     "react-modal": "^3.4.4",
     "react-switch": "^2.3.2",
-    "react-syntax-highlighter": "^7.0.2",
+    "react-syntax-highlighter": "^11.0.2",
     "stringify-object": "^3.2.2"
   },
   "peerDependencies": {
